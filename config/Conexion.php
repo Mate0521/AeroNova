@@ -2,6 +2,8 @@
 
 class Conexion
 {
+
+    //esta clase tratantado con pdo me permite conectar a la base de datos de manera mas segura para evitar inyecciones sql
     private $conexion;
     private $resultado;
     private $charset="utf8";
