@@ -6,6 +6,9 @@ session_start();
 //zona para los inclue once de las clases
 include_once("config/Conexion.php");
 include_once("config/Seguridad.php");
+include_once("dao/PasajeroDAO.php");
+include_once("modelo/Persona.php");
+include_once("modelo/Pasajero.php");
 
 //este campo me sirvio para dar una capa mas de seguridad para quer 
 //no se pueda acceder a las vistas directamente ni que se viera la 
@@ -14,6 +17,8 @@ include_once("config/Seguridad.php");
 $pages = [
     "Home" => "views/Home.php",
     "Error" => "views/Error.php",
+    "Registrar" => "views/RegistroPasajero.php",
+    "Activar" => "views/Activacion.php"
 ];
 
 // Página por defecto
@@ -28,7 +33,7 @@ if (isset($_POST["cerrarSecion"])) {
 
 
 //para que se pudiera acceder a vistas que no requiere la variable de session id
-$vistasPublicas = ["Login", "Registrarse", "Error", "TablaPos"];
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar"];
 if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     // Si no hay sesión y la vista no es pública, redirigir a Error
     if (!in_array($page, $vistasPublicas)) {
