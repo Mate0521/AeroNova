@@ -26,19 +26,20 @@ class Pasajero extends Persona{
         $pasajeroDAO = new PasajeroDAO(null, $this->nombre, $this->apellido, $this->correo, $this->telefono, $this->clave, $this->codigoVerificacion);
         try {
             $sql =$pasajeroDAO -> crearPasajero();
+            var_dump($sql);
             $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
             $conexion -> cerrar();
 
-            $asunto = "Regitro de cliente";
-            $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
-            $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
-            $mensaje .= "http://.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
-            $opciones = array(
-                "From" => "contacto@itiud.org",
-                "Reply-To" => "no-responder@itiud.org"
-            );
+            // $asunto = "Regitro de cliente";
+            // $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
+            // $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
+            // $mensaje .= "http://.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
+            // $opciones = array(
+            //     "From" => "contacto@itiud.org",
+            //     "Reply-To" => "no-responder@itiud.org"
+            // );
             
-            mail($this->correo, $asunto, $mensaje, $opciones);
+            // mail($this->correo, $asunto, $mensaje, $opciones);
 
 
             return true;
@@ -67,9 +68,10 @@ class Pasajero extends Persona{
                 $this->codigoVerificacion = $fila[4];
             }
             $conexion -> cerrar();
+            return true;
         } catch (Exception $e) {
             $conexion -> cerrar();
-            throw $e;
+            return $e;
         }
     }
     public function varificarCodigoVerificacion($codigoVerificacion){
@@ -90,6 +92,26 @@ class Pasajero extends Persona{
         } catch (Exception $e) {
             $conexion -> cerrar();
             throw $e;
+        }
+    }
+
+    public function obtenerPasajeroId(){
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pasajeroDAO = new PasajeroDAO($this->id, null, null, null, null, null, null);
+        try {
+            $sql =$pasajeroDAO -> obtenerPasajeroId();
+            $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
+            if($fila = $conexion ->registro()){
+                $this->nombre = $fila[0];
+                $this->apellido = $fila[1];
+                $this->correo = $fila[2];
+                $this->telefono = $fila[3];
+            }
+            $conexion -> cerrar();
+        } catch (Exception $e) {
+            $conexion -> cerrar();
+            return $e;
         }
     }
 

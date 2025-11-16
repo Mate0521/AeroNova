@@ -1,5 +1,7 @@
 <?php 
+var_dump($_POST);
 if(isset($_POST["registrar"])){
+    echo "llego";
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
     $correo = $_POST["correo"];
@@ -51,7 +53,7 @@ if(isset($_POST["registrar"])){
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                            <button type="submit" class="btn btn-primary" name="registrar">Registrarse</button>
                         </div>
 
                     </form>

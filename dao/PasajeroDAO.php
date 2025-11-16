@@ -23,7 +23,7 @@ class PasajeroDAO
 
     public function crearPasajero(){
         return [
-            "sql"=>"INSERT INTO g1_pasajero(nombre, apellido, correo, telefono, clave, codigoVerificacion)
+            "sql"=>"INSERT INTO `pasajero`( `Nombre`, `Apellido`, `Correo`, `Telefono`, `Clave`, `Codigo_Verificacion`)
                 VALUES ( :nombre, :apellido, :correo, :telefono, :clave, :codigoVerificacion )",
             "parametros"=>[
                 ":nombre"=>$this->nombre,
@@ -38,7 +38,7 @@ class PasajeroDAO
     public function consultarPorCorreo(){
         return [
             "sql"=>"SELECT `idPasajero`, `Nombre`, `Apellido`, `Telefono`, `Codigo_Verificacion` 
-                FROM `g1_pasajero` 
+                FROM `pasajero` 
                 WHERE `Correo`= :correo",
             "parametros"=>[
                 ":correo"=>$this->correo
@@ -47,12 +47,22 @@ class PasajeroDAO
     }
     public function activarCuenta(){
         return [
-            "sql"=>"UPDATE `g1_pasajero` 
+            "sql"=>"UPDATE `pasajero` 
                 SET `estado`= 1, `Codigo_Verificacion`= 0
                 WHERE `idPasajero`= :idPasajero",
             "parametros"=>[
                 ":idPasajero"=>$this->id
             ]
+        ];
+    }
+    public function obtenerPasajeroId(){
+        return [
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono` 
+                    FROM `pasajero` 
+                    WHERE `idPasajero`= :id",
+            "parametros" => [
+                ":id" => $this->id
+                ]
         ];
     }
 }

@@ -18,7 +18,7 @@ $pages = [
     "Home" => "views/Home.php",
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
-    "Activar" => "views/Activacion.php"
+    "Activar" => "views/Activacio.php"
 ];
 
 // Página por defecto
@@ -33,7 +33,7 @@ if (isset($_POST["cerrarSecion"])) {
 
 
 //para que se pudiera acceder a vistas que no requiere la variable de session id
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar"];
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home"];
 if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     // Si no hay sesión y la vista no es pública, redirigir a Error
     if (!in_array($page, $vistasPublicas)) {
@@ -47,7 +47,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>LigaMain</title>
+    <title>AeroNova</title>
      <link rel="icon" href="favicon.ico" type="image/x-icon"><!-- falta agregar el icono de la pagina  -->
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">

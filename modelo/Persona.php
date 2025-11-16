@@ -1,13 +1,12 @@
 <?php
 abstract class Persona
 {
-    private $id;
-    private $nombre;
-    private $apellido;
-    private $correo;
-    private $telefono;
-    private $clave;
-
+    protected $id;
+    protected $nombre;
+    protected $apellido;
+    protected $correo;
+    protected $telefono;
+    protected $clave;
     //constructor
     public function __construct($id=null, $nombre=null, $apellido=null, $correo=null, $telefono=null, $clave=null)
     {

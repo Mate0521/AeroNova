@@ -9,13 +9,13 @@ class Conexion
     private $charset="utf8";
     private $hosname = "localhost";
 
-    // private $databadase = "liga_main";
-    // private $username = "root";
-    // private $password = "";
+    private $databadase = "aeropuerto";
+    private $username = "root";
+    private $password = "";
 
-    private $databadase = "itiud_aplint";
-    private $username = "itiud_aplint";
-    private $password = "GYesgQ118&";
+    // private $databadase = "itiud_aplint";
+    // private $username = "itiud_aplint";
+    // private $password = "GYesgQ118&";
     
     function abrir(){
         try{
