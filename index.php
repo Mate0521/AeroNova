@@ -1,85 +1,74 @@
 <?php
+// Unificar el nombre de sesión en TODA la app
 session_name("AERO_SESSION");
 session_start();
 
-
-//zona para los inclue once de las clases
-include_once("config/Conexion.php");
-include_once("config/Seguridad.php");
-
-//este campo me sirvio para dar una capa mas de seguridad para quer 
-//no se pueda acceder a las vistas directamente ni que se viera la 
-//estructura de carpetas no si te paresca par a mejorar la seguridad
-
-$pages = [
-    "Home" => "views/Home.php",
-    "Error" => "views/Error.php",
-];
-
-// Página por defecto
-$page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
+require_once("modelo/Persona.php");
+require_once("modelo/Admin.php");
 
 // Cerrar sesión
-if (isset($_POST["cerrarSecion"])) {
+if (isset($_GET["salir"])) {
+    session_unset();
     session_destroy();
-    header("Location: ?pid=". base64_encode("Home"));
+    header("Location: index.php");
     exit();
 }
-
-
-//para que se pudiera acceder a vistas que no requiere la variable de session id
-$vistasPublicas = ["Login", "Registrarse", "Error", "TablaPos"];
-if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
-    // Si no hay sesión y la vista no es pública, redirigir a Error
-    if (!in_array($page, $vistasPublicas)) {
-        $page = "Error";
-    }
-}
-
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>LigaMain</title>
-     <link rel="icon" href="favicon.ico" type="image/x-icon"><!-- falta agregar el icono de la pagina  -->
+    <title>AeroNova</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+    <!-- Bootstrap + jQuery -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <div>
-        <?php
-            if ($page != "Login" && $page != "Registrarse") { // paginas que no requieren que se muestre el menu
-                include('component/menu.php');
-            }
-        ?>
-    </div>
-    <div>
-        <?php
-            if (array_key_exists($page, $pages)) {
-                include($pages[$page]);
-            } else {
-                include($pages["Error"]);
-            }
-        ?>
 
-    </div>
-    <div>
-        <?php
-            if ($page != "Login" && $page != "Registrarse") {// paginas que no requieren que se muestre el footer
-                include('component/footer.php');
-            }
-        ?>
-    </div>
-    
+<?php
+// -------------------------------------
+// 1. Página por defecto
+// -------------------------------------
+if (!isset($_GET["pid"])) {
+    include("views/inicio.php");
+    exit();
+}
+
+// -------------------------------------
+// 2. Recibir pid directamente SIN base64
+// -------------------------------------
+$pid = $_GET["pid"];
+
+// -------------------------------------
+// 3. Seguridad: solo permitir vistas válidas
+// -------------------------------------
+$allowed = [
+    "views/autenticar.php",
+    "views/sesionAdmin.php",
+    "views/inicio.php"
+];
+
+if (!in_array($pid, $allowed)) {
+    echo "<div class='alert alert-danger m-3'>Página no permitida.</div>";
+    include("views/inicio.php");
+    exit();
+}
+
+// -------------------------------------
+// 4. Control de acceso: si hay sesión → mostrar vista
+// -------------------------------------
+if (isset($_SESSION["id"])) {
+    include($pid);
+} else {
+    // Si no hay sesión, ir a autenticar sí o sí
+    include("views/autenticar.php");
+}
+?>
+
 </body>
-
 </html>
