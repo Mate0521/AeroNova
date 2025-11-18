@@ -1,9 +1,4 @@
 <?php
-// empezar sesión antes de cualquier salida
-if (session_status() === PHP_SESSION_NONE) session_start();
-
-require_once(__DIR__ . "/../modelo/Persona.php");
-require_once(__DIR__ . "/../modelo/Admin.php");
 
 // mostrar errores en desarrollo (quita en producción)
 error_reporting(E_ALL);
@@ -15,28 +10,20 @@ if (isset($_POST["autenticar"])) {
     $correo = $_POST["correo"] ?? '';
     $clave  = $_POST["clave"] ?? '';
 
-    $admin = new Admin("", "", "", $correo, $clave);
+    $admin = new Admin("", "", "", $correo, "",$clave);
 
     if ($admin->autenticar()) {
         $_SESSION["id"] = $admin->getId();
         $_SESSION["rol"] = "admin";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-
-    header('Location: /index.php?pid=views/sesionAdmin.php');
+        header('Location: /?pid='. base64_encode('panelAdmin'));
         exit();
     } else {
         $error = 1;
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>AeroNova - Autenticar</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+
 <div class="container">
   <div class="row mt-5">
     <div class="col-4"></div>
@@ -65,5 +52,4 @@ if (isset($_POST["autenticar"])) {
     </div>
   </div>
 </div>
-</body>
-</html>
+

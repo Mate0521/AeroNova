@@ -8,9 +8,10 @@ class PasajeroDAO
     private $telefono;
     private $clave;
     private $codigoVerificacion;
+    private $estado_cuenta;
 
     //constructor
-    public function __construct($id=null, $nombre=null, $apellido=null, $correo=null, $telefono=null, $clave=null, $codigoVerificacion = null)
+    public function __construct($id=null, $nombre=null, $apellido=null, $correo=null, $telefono=null, $clave=null, $codigoVerificacion = null, $estado_cuenta = null)
     {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -19,6 +20,7 @@ class PasajeroDAO
         $this->telefono = $telefono;
         $this->clave = $clave;
         $this->codigoVerificacion = $codigoVerificacion;
+        $this->estado_cuenta = $estado_cuenta;
     }
 
     public function crearPasajero(){
@@ -48,7 +50,7 @@ class PasajeroDAO
     public function activarCuenta(){
         return [
             "sql"=>"UPDATE `pasajero` 
-                SET `estado`= 1, `Codigo_Verificacion`= 0
+                SET `estado_cuenta`= 1, `Codigo_Verificacion`= 0
                 WHERE `idPasajero`= :idPasajero",
             "parametros"=>[
                 ":idPasajero"=>$this->id
@@ -57,7 +59,7 @@ class PasajeroDAO
     }
     public function obtenerPasajeroId(){
         return [
-            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono` 
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
                     FROM `pasajero` 
                     WHERE `idPasajero`= :id",
             "parametros" => [

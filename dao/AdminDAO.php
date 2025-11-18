@@ -29,9 +29,15 @@ class AdminDAO {
     }
     
     public function autenticar(){
-        return "select idAdministrador
+        return [
+            "sql" => "select idAdministrador
                 from administrador
-                where Correo = '" . $this -> correo . "' and Clave = md5('" . $this -> clave . "')";
+                where Correo = :correo and Clave = :clave",
+            "parametros" => [
+                ":correo" => $this->correo,
+                ":clave" => md5($this->clave)
+            ]
+        ];
     }
     
     

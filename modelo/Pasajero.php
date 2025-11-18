@@ -1,22 +1,32 @@
 <?php 
 class Pasajero extends Persona{
     private $codigoVerificacion;
+    private $estado_cuenta;
 
     //constructor
-    public function __construct($id=null, $nombre=null, $apellido=null, $correo=null, $telefono=null, $clave=null, $codigoVerificacion = null)
+    public function __construct($id=null, $nombre=null, $apellido=null, $correo=null, $telefono=null, $clave=null, $codigoVerificacion = null, $estado_cuenta = null)
     {
         parent::__construct($id,$nombre, $apellido, $correo, $telefono, $clave);
         $this->codigoVerificacion = $codigoVerificacion;
+        $this->estado_cuenta = $estado_cuenta;
     }
     //getter
     public function getCodigoVerificacion()
     {
         return $this->codigoVerificacion;
     }
+    public function getEstadoCuenta()
+    {
+        return $this->estado_cuenta;
+    }
     //setter
     public function setCodigoVerificacion($codigoVerificacion)
     {
         $this->codigoVerificacion = $codigoVerificacion;
+    }
+    public function setEstadoCuenta($estado_cuenta)
+    {
+        $this->estado_cuenta = $estado_cuenta;
     }
 
     public function crearPasajero(){
@@ -107,6 +117,7 @@ class Pasajero extends Persona{
                 $this->apellido = $fila[1];
                 $this->correo = $fila[2];
                 $this->telefono = $fila[3];
+                $this->estado_cuenta = $fila[4];
             }
             $conexion -> cerrar();
         } catch (Exception $e) {

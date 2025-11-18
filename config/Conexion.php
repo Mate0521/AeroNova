@@ -14,30 +14,36 @@ class Conexion{
     // private $username = "itiud_aplint";
     // private $password = "GYesgQ118&";
     
-    public function abrir(){
-        if($_SERVER['REMOTE_ADDR'] == "::1"){
-            $this -> conexion = new mysqli("localhost", "root", "", "aeropuerto");
-        }else{
-            $this -> conexion = new mysqli("localhost", "itiud_cocinaetilica", "UXpieQ728%", "itiud_cocinaetilica");
+    function abrir(){
+        try{
+            $option = [
+                PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ];
+            $this->conexion = new PDO("mysql:host={$this->hosname};dbname={$this->databadase};charset={$this->charset}", 
+                                    $this->username, 
+                                    $this->password,
+                                    $option);
+        }catch(PDOException $e){
+            return $e->getMessage();
         }
     }
-    
-    public function cerrar(){
-        $this -> conexion -> close();
+    public function cerrar() {
+        $this->conexion = null; 
     }
-    
-    public function ejecutar($sentencia){
-        $this -> resultado = $this -> conexion -> query($sentencia);
+    public function ejecutar($sql, $parametros = []) {
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute($parametros);
+        $this->resultado = $stmt;
     }
-    
-    public function registro(){
-        return $this -> resultado -> fetch_row();
+    public function registro() {
+        return $this->resultado->fetch();
     }
-    
-    public function filas(){
-        return $this -> resultado -> num_rows;
+
+    public function filas() {
+        return $this->resultado->rowCount();
     }
-    
+
 }
 
 

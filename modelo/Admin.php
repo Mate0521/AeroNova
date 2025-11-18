@@ -28,8 +28,9 @@ class Admin extends Persona{
     public function autenticar(){
         $conexion = new Conexion();
         $conexion -> abrir();
-        $adminDAO = new AdminDAO("", "", "", $this -> correo, $this -> clave);
-        $conexion -> ejecutar($adminDAO -> autenticar());
+        $adminDAO = new AdminDAO("", "", "", $this -> correo, "", $this -> clave);
+        $sql = $adminDAO -> autenticar();
+        $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
         $tupla = $conexion -> registro();
         $conexion -> cerrar();
         if($tupla != null){

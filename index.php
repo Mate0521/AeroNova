@@ -19,7 +19,8 @@ $pages = [
     "Home" => "views/Home.php",
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
-    "Activar" => "views/Activacio.php"
+    "Activar" => "views/Activacio.php",
+    "panelAdmin"=>"views/sesionAdmin.php"
 ];
 
 // Página por defecto
@@ -46,66 +47,46 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>AeroNova</title>
-     <link rel="icon" href="favicon.ico" type="image/x-icon"><!-- falta agregar el icono de la pagina  -->
+    <head>
+        <meta charset="UTF-8">
+        <title>AeroNova</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon"><!-- falta agregar el icono de la pagina  -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap + jQuery -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <div>
+            <?php
+                if ($page != "Login" && $page != "Registrarse") { // paginas que no requieren que se muestre el menu
+                    include('component/menu.php');
+                }
+            ?>
+        </div>
+        <div clases="container mt-4 mb-4 text-center">
+            <?php
+                if (array_key_exists($page, $pages)) {
+                    include($pages[$page]);
+                } else {
+                    include($pages["Error"]);
+                }
+            ?>
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-
-<?php
-// -------------------------------------
-// 1. Página por defecto
-// -------------------------------------
-if (!isset($_GET["pid"])) {
-    include("views/inicio.php");
-    exit();
-}
-
-// -------------------------------------
-// 2. Recibir pid directamente SIN base64
-// -------------------------------------
-$pid = $_GET["pid"];
-
-// -------------------------------------
-// 3. Seguridad: solo permitir vistas válidas
-// -------------------------------------
-$allowed = [
-    "views/autenticar.php",
-    "views/sesionAdmin.php",
-    "views/inicio.php"
-];
-
-if (!in_array($pid, $allowed)) {
-    echo "<div class='alert alert-danger m-3'>Página no permitida.</div>";
-    include("views/inicio.php");
-    exit();
-}
-
-// -------------------------------------
-// 4. Control de acceso: si hay sesión → mostrar vista
-// -------------------------------------
-if (isset($_SESSION["id"])) {
-    include($pid);
-} else {
-    // Si no hay sesión, ir a autenticar sí o sí
-    include("views/autenticar.php");
-}
-?>
-
-</body>
+        </div>
+        <div>
+            <?php
+                if ($page != "Login" && $page != "Registrarse") {// paginas que no requieren que se muestre el footer
+                    include('component/footer.php');
+                }
+            ?>
+        </div>
+        
+    </body>
 </html>
