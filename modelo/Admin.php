@@ -24,6 +24,24 @@ class Admin extends Persona{
             return $e;
         }
     }
-
+    
+    public function autenticar(){
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $adminDAO = new AdminDAO("", "", "", $this -> correo, $this -> clave);
+        $conexion -> ejecutar($adminDAO -> autenticar());
+        $tupla = $conexion -> registro();
+        $conexion -> cerrar();
+        if($tupla != null){
+            $this -> id = $tupla[0];
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
+
+
+
+?>

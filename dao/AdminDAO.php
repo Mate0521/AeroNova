@@ -1,6 +1,5 @@
-<?php 
-class AdminDAO{
-
+<?php
+class AdminDAO {
     private $id;
     private $nombre;
     private $apellido;
@@ -28,4 +27,13 @@ class AdminDAO{
                 ]
         ];
     }
+    
+    public function autenticar(){
+        return "select idAdministrador
+                from administrador
+                where Correo = '" . $this -> correo . "' and Clave = md5('" . $this -> clave . "')";
+    }
+    
+    
 }
+
