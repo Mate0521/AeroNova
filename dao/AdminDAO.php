@@ -20,7 +20,7 @@ class AdminDAO {
     public function obtenerAdminId(){
         return [
             "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono` 
-                    FROM `administrador` 
+                    FROM `g2_administrador` 
                     WHERE `idAdministrador`= :id",
             "parametros" => [
                 ":id" => $this->id
@@ -31,7 +31,7 @@ class AdminDAO {
     public function autenticar(){
         return [
             "sql" => "select idAdministrador
-                from administrador
+                from g2_administrador
                 where Correo = :correo and Clave = :clave",
             "parametros" => [
                 ":correo" => $this->correo,

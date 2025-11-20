@@ -65,7 +65,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     <body>
         <div>
             <?php
-                if ($page != "Login" && $page != "Registrarse") { // paginas que no requieren que se muestre el menu
+                if ($page != "Login" && $page != "Registrar") { // paginas que no requieren que se muestre el menu
                     include('component/menu.php');
                 }
             ?>

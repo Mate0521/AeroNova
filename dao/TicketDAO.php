@@ -24,7 +24,7 @@ class TicketDAO
     {
         return [
             "sql" => "SELECT `Estado_Ticket_idEstado_Ticket`, `Precio`, `Puesto`, `Pasajero_idPasajero`, `Vuelo_idVuelo`, `Check_in` 
-                    FROM `ticket` 
+                    FROM `g2_ticket` 
                     WHERE `idTicket`= :idTicket",
             "parametros" => [
                 ":idTicket" => $this->idTicket
