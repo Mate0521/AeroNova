@@ -1,20 +1,17 @@
 <?php
 
-class Conexion
-{
-
-    //esta clase tratantado con pdo me permite conectar a la base de datos de manera mas segura para evitar inyecciones sql
+class Conexion{
     private $conexion;
     private $resultado;
     private $charset="utf8";
     private $hosname = "localhost";
 
-    // private $databadase = "liga_main";
+    // private $databadase = "aeropuerto";
     // private $username = "root";
     // private $password = "";
 
-    private $databadase = "itiud_aplint";
-    private $username = "itiud_aplint";
+    private $databadase = "	itiud_aplint2";
+    private $username = "itiud_aplint2";
     private $password = "GYesgQ118&";
     
     function abrir(){
@@ -47,6 +44,7 @@ class Conexion
         return $this->resultado->rowCount();
     }
 
-
-
 }
+
+
+?>
