@@ -179,4 +179,33 @@ class Vuelo
         }
     }
 
+    public function calcularIndiceDemanda($cantTickets)
+    {
+
+        $capacidadAvion = $this->avion->getCapacidad();
+
+        $fechaVuelo = new DateTime($this->fecha . ' ' . $this->hora_despegue);
+        $hoy = new DateTime();
+        
+        if ($hoy > $fechaVuelo) return 100; 
+
+        $diasRestantes = (int)$hoy->diff($fechaVuelo)->format("%a");
+
+        
+        $ventanaRelevante = 90; 
+        $diasAjustados = min($diasRestantes, $ventanaRelevante);
+        
+        $normTiempo = (1 - ($diasAjustados / $ventanaRelevante)) * 100;
+
+        $normCapacidad = ($cantTickets / $capacidadAvion) * 100;
+        
+        if ($normCapacidad > 100) $normCapacidad = 100;
+
+        $pesoTiempo = 0.3;
+        $pesoCapacidad = 0.7;
+
+        $indice = ($normTiempo * $pesoTiempo) + ($normCapacidad * $pesoCapacidad);
+
+        return round($indice, 2);
+    }
 }

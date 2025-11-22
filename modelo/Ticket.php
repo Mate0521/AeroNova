@@ -109,4 +109,71 @@ class Ticket
             return $e;
         }
     }
+
+    public function calcularPrecioBase()
+    {
+        //lo dividimos en partes 
+        //consultamos el vuelo a partir de su distancia, obtenemos el valor del brent y calculamos el precio de conbustible
+        //luego sumamos el costo de operacion a partir de la distancia
+        //agregamos el margen de ganancia 
+        //tambien toamamos del vuelo la ocupacion que tienen respecto a la fecha 
+
+  
+        $url = 'https://api.oilpriceapi.com/v1/prices/latest';
+    
+        $curl = curl_init($url);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Authorization: Token 6030acac3b094f7051382129004089a73fc40359c1a830a6902a65a0aac05143"
+        ]);
+        $datos = curl_exec($curl);   
+
+        $productos = json_decode($datos, true);
+        
+        $precioBrent = $productos["data"]["BRENT"]['price']; //aqui esta el precio del brent barril
+        
+        $vuelo =new Vuelo($this->vuelo);
+        $vuelo->obtenerVueloId();
+        $duracion = $vuelo->getRuta()->getDuracionEstimada();
+
+        $costoCombustible = (($precioBrent/159*0.85)+0.20)*4*$duracion;//primera variable costo del combustible
+        $costoOperacion = 180*$duracion; //segunda variable costo de operacion
+        $precioBase = ($costoCombustible + $costoOperacion)*1.30; // ganancia de 30
+
+        $ocupacion = $vuelo->calcularOcupacion( $this->cantidadParaVuelo());
+
+        switch (true) {
+            case ($ocupacion > 90):
+                $factor = 1.80;
+                break;
+            case ($ocupacion > 60):
+                $factor = 1.45; 
+                break;
+            case ($ocupacion > 30):
+                $factor = 1.15; 
+                break;
+            default:
+                $factor = 0.90; 
+        }
+
+        $precioBase *= $factor;
+    }
+
+    public function cantidadParaVuelo()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO("", "", "", "", "", $this->vuelo);
+        try {
+            $sql = $ticketDAO->cantidadParaVuelo();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $cantidad = $conexion->registro();
+            $conexion->cerrar();
+            return $cantidad[0];
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
 }

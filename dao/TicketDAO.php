@@ -31,4 +31,14 @@ class TicketDAO
             ]
         ];
     }
+    
+    public function cantidadParaVuelo()
+    {
+        return [
+            "sql" => "SELECT COUNT(*) FROM `g2_ticket` WHERE `Vuelo_idVuelo` = :vuelo",
+            "parametros" => [
+                ":vuelo" => $this->vuelo
+            ]
+        ];
+    }
 }
