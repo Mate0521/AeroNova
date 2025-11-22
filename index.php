@@ -50,17 +50,14 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
 
 if (isset($_SESSION["rol"])) {
 
-    // ADMIN no puede entrar a otros paneles
     if ($_SESSION["rol"] == "admin" && $page != "panelAdmin" && !in_array($page, $vistasPublicas)) {
         $page = "Error";
     }
 
-    // PILOTO no puede entrar a otros paneles
     if ($_SESSION["rol"] == "piloto" && $page != "panelPiloto" && !in_array($page, $vistasPublicas)) {
         $page = "Error";
     }
 
-    // PASAJERO no puede entrar a otros paneles
     if ($_SESSION["rol"] == "pasajero" && $page != "panelPasajero" && !in_array($page, $vistasPublicas)) {
         $page = "Error";
     }
