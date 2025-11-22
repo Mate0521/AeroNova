@@ -14,7 +14,7 @@ class EstadoDAO
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `estado_vuelo  ` 
+                    FROM `g2_estado_vuelo  ` 
                     WHERE `idEstado_Vuelo`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado
@@ -25,7 +25,7 @@ class EstadoDAO
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `estado_ticket`      
+                    FROM `g2_estado_ticket`      
                     WHERE `idEstado_Ticket`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado
@@ -36,7 +36,7 @@ class EstadoDAO
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `estado_piloto`      
+                    FROM `g2_estado_piloto`      
                     WHERE `id_estado`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado

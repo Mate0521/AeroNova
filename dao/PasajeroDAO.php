@@ -25,7 +25,7 @@ class PasajeroDAO
 
     public function crearPasajero(){
         return [
-            "sql"=>"INSERT INTO `pasajero`( `Nombre`, `Apellido`, `Correo`, `Telefono`, `Clave`, `Codigo_Verificacion`)
+            "sql"=>"INSERT INTO `g2_pasajero`( `Nombre`, `Apellido`, `Correo`, `Telefono`, `Clave`, `Codigo_Verificacion`)
                 VALUES ( :nombre, :apellido, :correo, :telefono, :clave, :codigoVerificacion )",
             "parametros"=>[
                 ":nombre"=>$this->nombre,
@@ -40,7 +40,7 @@ class PasajeroDAO
     public function consultarPorCorreo(){
         return [
             "sql"=>"SELECT `idPasajero`, `Nombre`, `Apellido`, `Telefono`, `Codigo_Verificacion` 
-                FROM `pasajero` 
+                FROM `g2_pasajero` 
                 WHERE `Correo`= :correo",
             "parametros"=>[
                 ":correo"=>$this->correo
@@ -49,7 +49,7 @@ class PasajeroDAO
     }
     public function activarCuenta(){
         return [
-            "sql"=>"UPDATE `pasajero` 
+            "sql"=>"UPDATE `g2_pasajero` 
                 SET `estado_cuenta`= 1, `Codigo_Verificacion`= 0
                 WHERE `idPasajero`= :idPasajero",
             "parametros"=>[
@@ -60,7 +60,7 @@ class PasajeroDAO
     public function obtenerPasajeroId(){
         return [
             "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
-                    FROM `pasajero` 
+                    FROM `g2_pasajero` 
                     WHERE `idPasajero`= :id",
             "parametros" => [
                 ":id" => $this->id
@@ -71,7 +71,7 @@ class PasajeroDAO
     public function autenticar(){
         return [
             "sql" => "select idPasajero
-                from pasajero
+                from g2_pasajero
                 where Correo = :correo and Clave = :clave",
             "parametros" => [
                 ":correo" => $this->correo,

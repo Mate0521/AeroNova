@@ -16,7 +16,7 @@ class AvionDAO
     {
         return [
             "sql" => "SELECT `Modelo`, `Capacidad` 
-                    FROM `avion` 
+                    FROM `g2_avion` 
                     WHERE `Matricula`= :matricula",
             "parametros" => [
                 ":matricula" => $this->matricula

@@ -14,7 +14,7 @@ class CiudadDAO
     {
         return [
             "sql" => "SELECT `Nombre` 
-                    FROM `ciudad` 
+                    FROM `g2_ciudad` 
                     WHERE `idCiudad`= :idCiudad",
             "parametros" => [
                 ":idCiudad" => $this->idCiudad

@@ -27,7 +27,7 @@ class PilotoDAO{
     public function obtenerPilotoId(){
         return [
             "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `Foto`, `estado_cuenta`, `id_estado_piloto`
-                    FROM `piloto` 
+                    FROM `g2_piloto` 
                     WHERE `idPiloto`= :id",
             "parametros" => [
                 ":id" => $this->id
@@ -38,7 +38,7 @@ class PilotoDAO{
         public function autenticar(){
         return [
             "sql" => "select idPiloto
-                from piloto
+                from g2_piloto
                 where Correo = :correo and Clave = :clave",
             "parametros" => [
                 ":correo" => $this->correo,

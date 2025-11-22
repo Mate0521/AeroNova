@@ -29,7 +29,7 @@ class VueloDAO
     {
         return [
             "sql" => "SELECT `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
-                    FROM `vuelo` 
+                    FROM `g2_vuelo` 
                     WHERE `idVuelo` = :idVuelo",
             "parametros" => [
                 ":idVuelo" => $this->idVuelo

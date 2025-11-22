@@ -21,7 +21,7 @@ class RutaDAO
     {
         return [
             "sql" => "SELECT `Duracion_Estimada`, `Distancia_KM`, `Origen`, `Destino` 
-                    FROM `ruta` 
+                    FROM `g2_ruta` 
                     WHERE `idRuta`= :idRuta",
             "parametros" => [
                 ":idRuta" => $this->idRuta

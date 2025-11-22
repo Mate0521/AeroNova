@@ -6,7 +6,7 @@ class Conexion{
     private $charset="utf8";
     private $hosname = "localhost";
 
-    private $databadase = "aeropuerto";
+    private $databadase = "aeropuertob";
     private $username = "root";
     private $password = "";
 
