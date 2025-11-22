@@ -10,6 +10,22 @@ include_once("config/Seguridad.php");
 include_once("dao/PasajeroDAO.php");
 include_once("modelo/Persona.php");
 include_once("modelo/Pasajero.php");
+include_once("dao/AdminDAO.php");
+include_once("modelo/Admin.php");
+include_once("dao/PilotoDAO.php");
+include_once("modelo/Piloto.php");
+include_once("dao/AvionDAO.php");
+include_once("modelo/Avion.php");
+include_once("dao/RutaDAO.php");
+include_once("modelo/Ruta.php");
+include_once("dao/EstadoDAO.php");
+include_once("modelo/Estado.php");
+include_once("dao/VueloDAO.php");
+include_once("modelo/Vuelo.php");
+include_once("dao/TicketDAO.php");
+include_once("modelo/Ticket.php");
+include_once("dao/CiudadDAO.php");
+include_once("modelo/Ciudad.php");
 
 //este campo me sirvio para dar una capa mas de seguridad para quer 
 //no se pueda acceder a las vistas directamente ni que se viera la 
@@ -20,7 +36,8 @@ $pages = [
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
     "Activar" => "views/Activacio.php",
-    "panelAdmin"=>"views/sesionAdmin.php"
+    "panelAdmin"=>"views/sesionAdmin.php",
+    "Login" => "views/autenticar.php"
 ];
 
 // Página por defecto
@@ -62,7 +79,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
-    <body>
+    <body class="bg-black">
         <div>
             <?php
                 if ($page != "Login" && $page != "Registrar") { // paginas que no requieren que se muestre el menu

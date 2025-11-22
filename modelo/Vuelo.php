@@ -137,5 +137,46 @@ class Vuelo
             return $e;
         }
     }
+    public function consultarVuelos()//lista de 5 vuelos
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarVuelos();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[6], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
 
 }

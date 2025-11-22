@@ -16,7 +16,7 @@ if (isset($_POST["autenticar"])) {
         $_SESSION["id"] = $admin->getId();
         $_SESSION["rol"] = "admin";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid='. base64_encode('panelAdmin'));
+        header('Location: ?pid='. base64_encode('panelAdmin'));
         exit();
     } else {
         $error = 1;
@@ -36,7 +36,7 @@ if (isset($_POST["autenticar"])) {
               echo "<div class='alert alert-danger' role='alert'>Correo o clave incorrectos</div>";
           }
           ?>
-<form method="post" action="/index.php?pid=views/autenticar.php">
+          <form method="post" action="?pid=<?php echo base64_encode("Login") ?>">
             <div class="mb-3">
               <input type="email" class="form-control" name="correo" placeholder="Correo" required>
             </div>
@@ -44,7 +44,7 @@ if (isset($_POST["autenticar"])) {
               <input type="password" class="form-control" name="clave" placeholder="Clave" required>
             </div>
             <div class="mb-3">
-              <button type="submit" class="btn btn-primary" name="autenticar">Autenticar</button>
+              <button type="submit" class="btn btn-outline-secondary" name="autenticar">Autenticar</button>
             </div>
           </form>
         </div>
