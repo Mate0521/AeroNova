@@ -20,7 +20,11 @@ $pages = [
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
     "Activar" => "views/Activacio.php",
-    "panelAdmin"=>"views/sesionAdmin.php"
+    "panelAdmin"=>"views/sesionAdmin.php",
+    "panelPiloto"=>"views/sesionPiloto.php",
+    "panelPasajero"=>"views/sesionPasajero.php",
+    "Login" => "views/autenticar.php"
+
 ];
 
 // Página por defecto
@@ -43,6 +47,25 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         $page = "Error";
     }
 }
+
+if (isset($_SESSION["rol"])) {
+
+    // ADMIN no puede entrar a otros paneles
+    if ($_SESSION["rol"] == "admin" && $page != "panelAdmin" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+
+    // PILOTO no puede entrar a otros paneles
+    if ($_SESSION["rol"] == "piloto" && $page != "panelPiloto" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+
+    // PASAJERO no puede entrar a otros paneles
+    if ($_SESSION["rol"] == "pasajero" && $page != "panelPasajero" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+}
+
 
 ?>
 <!DOCTYPE html>

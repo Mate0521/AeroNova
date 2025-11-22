@@ -67,5 +67,17 @@ class PasajeroDAO
                 ]
         ];
     }
+
+    public function autenticar(){
+        return [
+            "sql" => "select idPasajero
+                from pasajero
+                where Correo = :correo and Clave = :clave",
+            "parametros" => [
+                ":correo" => $this->correo,
+                ":clave" => md5($this->clave)
+            ]
+        ];
+    }
 }
 ?>

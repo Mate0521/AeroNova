@@ -1,4 +1,11 @@
 <?php 
+
+require_once(__DIR__ . '/../dao/AdminDAO.php');
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/Persona.php');
+
+
+
 class Admin extends Persona{
     
     public function __construct($id = null, $nombre = null, $apellido = null, $correo = null, $telefono = null, $clave = null){

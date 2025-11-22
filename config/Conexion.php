@@ -6,13 +6,13 @@ class Conexion{
     private $charset="utf8";
     private $hosname = "localhost";
 
-    // private $databadase = "aeropuerto";
-    // private $username = "root";
-    // private $password = "";
+    private $databadase = "aeropuerto";
+    private $username = "root";
+    private $password = "";
 
-    private $databadase = "	itiud_aplint2";
-    private $username = "itiud_aplint2";
-    private $password = "GYesgQ118&";
+    //private $databadase = "	itiud_aplint2";
+    //private $username = "itiud_aplint2";
+    //private $password = "GYesgQ118&";
     
     function abrir(){
         try{

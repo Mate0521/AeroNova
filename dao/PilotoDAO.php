@@ -34,4 +34,16 @@ class PilotoDAO{
                 ]
         ];
     }
+
+        public function autenticar(){
+        return [
+            "sql" => "select idPiloto
+                from piloto
+                where Correo = :correo and Clave = :clave",
+            "parametros" => [
+                ":correo" => $this->correo,
+                ":clave" => md5($this->clave)
+            ]
+        ];
+    }
 }

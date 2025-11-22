@@ -126,6 +126,23 @@ class Pasajero extends Persona{
         }
     }
 
+    public function autenticar(){
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pasajeroDAO = new PasajeroDAO("", "", "", $this -> correo, "", $this -> clave);
+        $sql = $pasajeroDAO -> autenticar();
+        $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
+        $tupla = $conexion -> registro();
+        $conexion -> cerrar();
+        if($tupla != null){
+            $this -> id = $tupla[0];
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 
 
 
