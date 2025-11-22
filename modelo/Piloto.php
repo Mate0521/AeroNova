@@ -1,4 +1,7 @@
 <?php 
+require_once(__DIR__ . '/../dao/PilotoDAO.php');
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/Persona.php');
 class Piloto extends Persona{
     
     private $estadoPiloto;
@@ -53,6 +56,22 @@ class Piloto extends Persona{
         } catch (Exception $e) {
             $conexion -> cerrar();
             return $e;
+        }
+    }
+
+    public function autenticar(){
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pilotoDAO = new PilotoDAO("", "", "", $this -> correo, "", $this -> clave);
+        $sql = $pilotoDAO -> autenticar();
+        $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
+        $tupla = $conexion -> registro();
+        $conexion -> cerrar();
+        if($tupla != null){
+            $this -> id = $tupla[0];
+            return true;
+        }else{
+            return false;
         }
     }
 

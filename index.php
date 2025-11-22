@@ -37,7 +37,10 @@ $pages = [
     "Registrar" => "views/RegistroPasajero.php",
     "Activar" => "views/Activacio.php",
     "panelAdmin"=>"views/sesionAdmin.php",
+    "panelPiloto"=>"views/sesionPiloto.php",
+    "panelPasajero"=>"views/sesionPasajero.php",
     "Login" => "views/autenticar.php"
+
 ];
 
 // Página por defecto
@@ -60,6 +63,22 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         $page = "Error";
     }
 }
+
+if (isset($_SESSION["rol"])) {
+
+    if ($_SESSION["rol"] == "admin" && $page != "panelAdmin" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+
+    if ($_SESSION["rol"] == "piloto" && $page != "panelPiloto" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+
+    if ($_SESSION["rol"] == "pasajero" && $page != "panelPasajero" && !in_array($page, $vistasPublicas)) {
+        $page = "Error";
+    }
+}
+
 
 ?>
 <!DOCTYPE html>

@@ -39,8 +39,8 @@ class PasajeroDAO
     }
     public function consultarPorCorreo(){
         return [
-            "sql"=>"SELECT `g2_idPasajero`, `Nombre`, `Apellido`, `Telefono`, `Codigo_Verificacion` 
-                FROM `pasajero` 
+            "sql"=>"SELECT `idPasajero`, `Nombre`, `Apellido`, `Telefono`, `Codigo_Verificacion` 
+                FROM `g2_pasajero` 
                 WHERE `Correo`= :correo",
             "parametros"=>[
                 ":correo"=>$this->correo
@@ -65,6 +65,18 @@ class PasajeroDAO
             "parametros" => [
                 ":id" => $this->id
                 ]
+        ];
+    }
+
+    public function autenticar(){
+        return [
+            "sql" => "select idPasajero
+                from g2_pasajero
+                where Correo = :correo and Clave = :clave",
+            "parametros" => [
+                ":correo" => $this->correo,
+                ":clave" => md5($this->clave)
+            ]
         ];
     }
 }
