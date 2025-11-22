@@ -1,12 +1,12 @@
 <?php
-if(isset($_SESSION["role"])){
-    if($_SESSION["role"] == "U"){ 
+if(isset($_SESSION["rol"])){
+    if($_SESSION["rol"] == "pasajero"){ 
         $pasajero =new Pasajero($_SESSION["id"]);
         $pasajero -> obtenerPasajeroId();
-    } elseif($_SESSION["role"] == "A"){
+    } elseif($_SESSION["rol"] == "admin"){
         $admin =new Admin($_SESSION["id"]);
         $admin -> obtenerAdminId();
-    }elseif($_SESSION["role"] == "P"){
+    }elseif($_SESSION["rol"] == "piloto"){
         $piloto =new Piloto($_SESSION["id"]);
         $piloto -> obtenerPilotoId();
     }else{
@@ -20,8 +20,8 @@ if(isset($_SESSION["role"])){
 
 <header class="text-center p-3 sticky-top mb-4">
     <?php 
-    if(isset($_SESSION["role"])){
-        if($_SESSION["role"] == "A"){
+    if(isset($_SESSION["rol"])){
+        if($_SESSION["rol"] == "admin"){
     ?>
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
@@ -73,7 +73,7 @@ if(isset($_SESSION["role"])){
             </div>
         </nav>
 
-    <?php }elseif($_SESSION["role"] == "U"){?>
+    <?php }elseif($_SESSION["rol"] == "pasajero"){?>
 
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
@@ -135,7 +135,7 @@ if(isset($_SESSION["role"])){
         </nav>
 
     <?php 
-    }elseif($_SESSION["role"] == "P"){ 
+    }elseif($_SESSION["rol"] == "piloto"){ 
     ?>
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">

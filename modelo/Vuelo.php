@@ -147,7 +147,7 @@ class Vuelo
             $sql = $vueloDAO->consultarVuelos();
             $conexion->ejecutar($sql["sql"], $sql["parametros"]);
             while ($fila = $conexion->registro()) {
-                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[6], null);
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
 
                 $pilotoOB = new Piloto($fila[3]);
                 $pilotoOB->obtenerPilotoId();
