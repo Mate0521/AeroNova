@@ -7,25 +7,27 @@ session_start();
 //zona para los inclue once de las clases
 include_once("config/Conexion.php");
 include_once("config/Seguridad.php");
-include_once("dao/PasajeroDAO.php");
-include_once("modelo/Persona.php");
-include_once("modelo/Pasajero.php");
 include_once("dao/AdminDAO.php");
 include_once("modelo/Admin.php");
-include_once("dao/PilotoDAO.php");
-include_once("modelo/Piloto.php");
 include_once("dao/AvionDAO.php");
 include_once("modelo/Avion.php");
-include_once("dao/RutaDAO.php");
-include_once("modelo/Ruta.php");
-include_once("dao/EstadoDAO.php");
-include_once("modelo/Estado.php");
-include_once("dao/VueloDAO.php");
-include_once("modelo/Vuelo.php");
-include_once("dao/TicketDAO.php");
-include_once("modelo/Ticket.php");
 include_once("dao/CiudadDAO.php");
 include_once("modelo/Ciudad.php");
+include_once("dao/EstadoDAO.php");
+include_once("modelo/Estado.php");
+include_once("modelo/Persona.php");
+include_once("dao/PasajeroDAO.php");
+include_once("modelo/Pasajero.php");
+include_once("dao/PilotoDAO.php");
+include_once("modelo/Piloto.php");
+include_once("dao/RutaDAO.php");
+include_once("modelo/Ruta.php");
+include_once("dao/TicketDAO.php");
+include_once("modelo/Ticket.php");
+include_once("dao/VueloDAO.php");
+include_once("modelo/Vuelo.php");
+
+
 
 //este campo me sirvio para dar una capa mas de seguridad para quer 
 //no se pueda acceder a las vistas directamente ni que se viera la 
@@ -106,7 +108,7 @@ if (isset($_SESSION["rol"])) {
                 }
             ?>
         </div>
-        <div clases="container mt-4 mb-4 text-center">
+        <div class="container mt-4 mb-4 text-center">
             <?php
                 if (array_key_exists($page, $pages)) {
                     include($pages[$page]);
