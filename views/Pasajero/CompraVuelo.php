@@ -1,11 +1,14 @@
 <?php
-if(!isset($_SESSION['idUsuario'])){
+if(!isset($_SESSION['id'])){
     header("Location: ?pid=". base64_encode("Login"));
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if($_POST['reservarVuelo']){
     $idVuelo = base64_decode($_POST['idV']);
-    $ticket =new Ticket("", "", "", "",$_SESSION['id'], $idVuelo);
-    $precio = $ticket->calcularPrecio();
 
+    $vuelo=new Vuelo($idVuelo);
+    $vuelo->obtenerVueloId();
 }
+?>
+
+

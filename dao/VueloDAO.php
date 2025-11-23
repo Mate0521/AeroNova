@@ -41,8 +41,25 @@ class VueloDAO
     {
         return [
             "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
-                    FROM `g2_vuelo`",
+                    FROM `g2_vuelo`
+                    WHERE `Fecha` >= :fecha  AND `Hora_Despegue` >= :hora AND `Estado_Vuelo_idEstado_Vuelo` = :estado",
             "parametros" => []
         ];
+    }
+
+    public function buscarVuelo($filtro)
+    {
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
+                    FROM `g2_vuelo` v
+                    JOIN `g2_ruta` r ON v.Ruta_idRuta = r.idRuta
+                    JOIN `g2_ciudad` c1 ON r.Origen = c1.idCiudad
+                    JOIN `g2_ciudad` c2 ON r.Destino = c2.idCiudad
+                    WHERE (`Fecha` LIKE :filtro OR c1.Nombre_Ciudad LIKE :filtro OR c2.Nombre_Ciudad LIKE :filtro) AND `Estado_Vuelo_idEstado_Vuelo` = :estado",
+            "parametros" => [
+                ":filtro" => '%' . $filtro . '%'
+            ]
+        ];
+
     }
 }

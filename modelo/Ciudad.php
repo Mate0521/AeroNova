@@ -1,4 +1,7 @@
 <?php
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/CiudadDAO.php');
+
 class Ciudad
 {
     private $idCiudad;

@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/TicketDAO.php');
 
 class Ticket
 {
@@ -157,7 +159,7 @@ class Ticket
                 $factor = 0.90; 
         }
 
-        $precioBase *= $factor;
+        return$precioBase *= $factor;
     }
 
     public function cantidadParaVuelo()

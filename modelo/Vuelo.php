@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/VueloDAO.php');
 
 class Vuelo
 {
@@ -137,7 +139,7 @@ class Vuelo
             return $e;
         }
     }
-    public function consultarVuelos()//lista de 5 vuelos
+    public function consultarVuelos()
     {
         $conexion = new Conexion();
         $conexion->abrir();
@@ -145,7 +147,7 @@ class Vuelo
         $vuelos = [];
         try {
             $sql = $vueloDAO->consultarVuelos();
-            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
             while ($fila = $conexion->registro()) {
                 $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
 
@@ -179,7 +181,7 @@ class Vuelo
         }
     }
 
-    public function calcularIndiceDemanda($cantTickets)
+    public function calcularOcupacion($cantTickets)
     {
 
         $capacidadAvion = $this->avion->getCapacidad();
@@ -201,11 +203,63 @@ class Vuelo
         
         if ($normCapacidad > 100) $normCapacidad = 100;
 
-        $pesoTiempo = 0.3;
-        $pesoCapacidad = 0.7;
+        $pesoTiempo = 0.4;
+        $pesoCapacidad = 0.6;
 
         $indice = ($normTiempo * $pesoTiempo) + ($normCapacidad * $pesoCapacidad);
 
         return round($indice, 2);
+    }
+
+    public function buscarVueloDestino($filtro)
+    {
+        $conexion = new Conexion();
+        $vueloDAO = new VueloDAO();
+        $conexion->abrir();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->buscarVuelo($filtro);
+            $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function vuelosDisponibles()
+    {
+        $hoy = new DateTime();
+        return [
+            ":fecha" => $hoy->format('Y-m-d'),
+            ":hora" => $hoy->format('H:i:s'),
+            ":estado" => 1
+        ];
     }
 }

@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/EstadoDAO.php');
 class Estado
 {
     private $idEstado;

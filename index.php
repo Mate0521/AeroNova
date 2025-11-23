@@ -7,24 +7,14 @@ session_start();
 //zona para los inclue once de las clases
 include_once("config/Conexion.php");
 include_once("config/Seguridad.php");
-include_once("dao/AdminDAO.php");
 include_once("modelo/Admin.php");
-include_once("dao/AvionDAO.php");
 include_once("modelo/Avion.php");
-include_once("dao/CiudadDAO.php");
 include_once("modelo/Ciudad.php");
-include_once("dao/EstadoDAO.php");
 include_once("modelo/Estado.php");
-include_once("modelo/Persona.php");
-include_once("dao/PasajeroDAO.php");
 include_once("modelo/Pasajero.php");
-include_once("dao/PilotoDAO.php");
 include_once("modelo/Piloto.php");
-include_once("dao/RutaDAO.php");
 include_once("modelo/Ruta.php");
-include_once("dao/TicketDAO.php");
 include_once("modelo/Ticket.php");
-include_once("dao/VueloDAO.php");
 include_once("modelo/Vuelo.php");
 
 
@@ -41,7 +31,8 @@ $pages = [
     "panelAdmin"=>"views/sesionAdmin.php",
     "panelPiloto"=>"views/sesionPiloto.php",
     "panelPasajero"=>"views/sesionPasajero.php",
-    "Login" => "views/autenticar.php"
+    "Login" => "views/autenticar.php",
+    "reservarVuelo" => "views/Pasajero/CompraVuelo.php"
 
 ];
 
@@ -52,13 +43,13 @@ $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
 if (isset($_GET["salir"])) {
     session_unset();
     session_destroy();
-    header("Location: index.php");
+    header("Location: ?pid=" . base64_encode("Home"));
     exit();
 }
 
 
 //para que se pudiera acceder a vistas que no requiere la variable de session id
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home"];
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "reservarVuelo"];
 if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     // Si no hay sesión y la vista no es pública, redirigir a Error
     if (!in_array($page, $vistasPublicas)) {
