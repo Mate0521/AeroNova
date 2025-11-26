@@ -1,21 +1,49 @@
 <?php
+session_name("AERO_SESSION");
+session_start();
 
-$idVuelo = $_POST["idVuelo"];
-$precioBase = $_SESSION[$idVuelo]["precio"] ?? 0;
+include_once(__DIR__ . "/../modelo/Avion.php");
+include_once(__DIR__ . "/../modelo/Piloto.php");
+include_once(__DIR__ . "/../modelo/Ciudad.php");
+include_once(__DIR__ . "/../modelo/Ruta.php");
+include_once(__DIR__ . "/../modelo/Estado.php");
+include_once(__DIR__ . "/../modelo/Vuelo.php");
+include_once(__DIR__ . "/../modelo/Ticket.php");
+
+// VALIDAR
+if (!isset($_POST["idVuelo"]) || empty($_POST["idVuelo"])) {
+    echo "<div class='alert alert-danger'>Error: Vuelo no encontrado.</div>";
+    exit;
+}
+
+$idVuelo = intval($_POST["idVuelo"]);
+
+if (!isset($_SESSION["id"])) {
+    echo "<div class='alert alert-danger'>Debes iniciar sesión.</div>";
+    exit;
+}
+
+$ticket = new Ticket("", "", "", "", $_SESSION["id"], $idVuelo);
+$precioBase = $ticket->calcularPrecioBase();
+
+
+$_SESSION["v$idVuelo"] = [
+    "precio" => $precioBase
+];
 
 
 $precioEconomic = $precioBase;
 $precioClassic  = $precioBase * 1.15;
 $precioBusiness = $precioBase * 1.40;
 
-function formatCOP($num){
-    return "$" . number_format($num, 0, ",", ".");
+function formatCOP($n){
+    return "$" . number_format($n, 0, ",", ".");
 }
 ?>
 
 <h4 class="text-center text-white my-4">Elige cómo quieres volar</h4>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4 my-4">
 
     <!-- ECONOMIC -->
     <div class="col">
@@ -23,16 +51,22 @@ function formatCOP($num){
             <div class="card-body">
                 <h5 class="card-title text-danger fw-bold">Economic</h5>
                 <ul class="list-unstyled mt-3">
-                    <li>🛄 1 artículo personal (bolso)</li>
+                    <li>🛄 1 artículo personal</li>
                     <li>🎒 1 equipaje de mano (10 kg)</li>
                     <li>❌ Sin equipaje de bodega</li>
-                    <li>💺 Asiento asignado aleatoriamente</li>
-                    <li>🍽 Menú a bordo disponible a la venta</li>
-                    <li>🔁 Sin reembolsos / sin cambios</li>
+                    <li>💺 Asiento asignado aleatorio</li>
+                    <li>🍽 Menú disponible</li>
                 </ul>
             </div>
             <div class="card-footer text-center">
-                <a href="?pid=<?php echo base64_encode("reservarVuelo") ?>&idV=<?php echo $idVuelo?>"><h5 class="fw-bold text-danger"><?= formatCOP($precioEconomic) ?></h5></a>
+                <form action="?pid=<?= base64_encode("reservarVuelo") ?>" method="post">
+                    <input type="hidden" name="idVuelo" value="<?= $idVuelo ?>">
+                    <input type="hidden" name="clase" value="eco">
+
+                    <button type="submit" class="fw-bold text-danger">
+                        <h5 class="fw-bold text-danger"><?= formatCOP($precioEconomic) ?></h5>
+                    </button>
+                </form>
                 <small class="text-secondary">Precio por pasajero</small>
             </div>
         </div>
@@ -45,16 +79,20 @@ function formatCOP($num){
                 <h5 class="card-title text-primary fw-bold">Classic</h5>
                 <ul class="list-unstyled mt-3">
                     <li>🛄 1 artículo personal</li>
-                    <li>🎒 1 equipaje de mano (10 kg)</li>
-                    <li>🧳 1 equipaje de bodega (23 kg)</li>
+                    <li>🎒 1 equipaje de mano</li>
+                    <li>🧳 1 equipaje de bodega</li>
                     <li>💺 Asiento Economy incluido</li>
-                    <li>🍽 Menú a bordo incluido</li>
-                    <li>🔁 Cambios (antes del vuelo)</li>
-                    <li>⛔ No hay reembolsos</li>
                 </ul>
             </div>
             <div class="card-footer text-center">
-                <a href="?pid=<?php echo base64_encode("reservarVuelo") ?>&idV=<?php echo $idVuelo?>"><h5 class="fw-bold text-primary"><?= formatCOP($precioClassic) ?></h5></a>
+                <form action="?pid=<?= base64_encode("reservarVuelo") ?>" method="post">
+                    <input type="hidden" name="idVuelo" value="<?= $idVuelo ?>">
+                    <input type="hidden" name="clase" value="clas">
+
+                    <button type="submit" class="fw-bold text-primary">
+                        <h5 class="fw-bold text-primary"><?= formatCOP($precioClassic) ?></h5>
+                    </button>
+                </form>
                 <small class="text-secondary">Precio por pasajero</small>
             </div>
         </div>
@@ -66,19 +104,22 @@ function formatCOP($num){
             <div class="card-body">
                 <h5 class="card-title text-warning fw-bold">Business</h5>
                 <ul class="list-unstyled mt-3">
-                    <li>🛄 1 artículo personal</li>
-                    <li>🎒 1 equipaje de mano (10 kg)</li>
-                    <li>🧳 2 equipajes de bodega (32 kg)</li>
-                    <li>💺 Asiento Business Class</li>
-                    <li>🛫 Check-in y embarque prioritario</li>
-                    <li>🍽 Menú de alta cocina incluido</li>
-                    <li>🏆 Acceso a sala VIP</li>
-                    <li>🔁 Cambios gratis</li>
-                    <li>💸 Reembolsos disponibles</li>
+                    <li>🛄 Artículo personal + mano</li>
+                    <li>🧳 2 equipajes de bodega</li>
+                    <li>💺 Asiento Business</li>
+                    <li>🛫 Check-in prioritario</li>
+                    <li>🏆 Sala VIP</li>
                 </ul>
             </div>
             <div class="card-footer text-center">
-                <a href="?pid=<?php echo base64_encode("reservarVuelo") ?>&idV=<?php echo $idVuelo?>"><h5 class="fw-bold text-warning"><?= formatCOP($precioBusiness) ?></h5></a>
+                <form action="?pid=<?= base64_encode("reservarVuelo") ?>" method="post">
+                    <input type="hidden" name="idVuelo" value="<?= $idVuelo ?>">
+                    <input type="hidden" name="clase" value="bus">
+
+                    <button type="submit" class="fw-bold text-warning">
+                        <h5 class="fw-bold text-warning"><?= formatCOP($precioBusiness) ?></h5>
+                    </button>
+                </form>
                 <small class="text-secondary">Precio por pasajero</small>
             </div>
         </div>

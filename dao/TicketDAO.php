@@ -41,4 +41,20 @@ class TicketDAO
             ]
         ];
     }
+
+    public function crearTicket()
+    {
+        return [
+            "sql" => "INSERT INTO `g2_ticket`(`Estado_Ticket_idEstado_Ticket`, `Precio`, `Puesto`, `Pasajero_idPasajero`, `Vuelo_idVuelo`) 
+                VALUES (:estado, :precio, :puesto, :pasajero, :vuelo)",
+            "parametros" => [
+                ":estado"=>$this->estado_ticket,
+                ":precio"=>$this->precio,
+                ":puesto"=>$this->puesto,
+                ":pasajero"=>$this->pasajero,
+                ":vuelo" => $this->vuelo
+            ]
+            ];
+
+    }
 }

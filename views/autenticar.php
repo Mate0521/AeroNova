@@ -32,14 +32,14 @@ if (isset($_POST["autenticar"])) {
         $_SESSION["id"] = $piloto->getId();
         $_SESSION["rol"] = "piloto";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid='. base64_encode('panelPiloto'));
+        header('Location: ?pid='. base64_encode('panelPiloto'));
         exit();
 
     } else if($pasajero->autenticar()){
         $_SESSION["id"] = $pasajero->getId();
         $_SESSION["rol"] = "pasajero";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid='. base64_encode('panelPasajero'));
+        header('Location: ?pid='. base64_encode('panelPasajero'));
         exit();
 
     } 
@@ -49,32 +49,7 @@ if (isset($_POST["autenticar"])) {
     }
 }
 ?>
-
 <div class="bg-light d-flex justify-content-center align-items-center vh-100">
-    <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    $error = 0;
-
-    if (isset($_POST["autenticar"])) {
-        $correo = $_POST["correo"] ?? '';
-        $clave  = $_POST["clave"] ?? '';
-
-        $admin = new Admin("", "", "", $correo, "", $clave);
-
-        if ($admin->autenticar()) {
-            $_SESSION["id"] = $admin->getId();
-            $_SESSION["rol"] = "admin";
-            $_SESSION["mensaje"] = "¡Credenciales correctas!";
-            header('Location: ?pid=' . base64_encode('panelAdmin'));
-            exit();
-        } else {
-            $error = 1;
-        }
-    }
-    ?>
-
     <div class="card shadow-lg p-4" style="max-width: 380px; width: 100%;">
         <div class="text-center mb-3">
             <div class="display-4">✈️</div>
@@ -104,6 +79,7 @@ if (isset($_POST["autenticar"])) {
                 Iniciar sesión
             </button>
         </form>
+        <a href="?pid=<?php echo base64_encode("Registrar") ?>"></a>
     </div>
 
 </div>

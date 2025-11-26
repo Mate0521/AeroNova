@@ -139,14 +139,14 @@ class Vuelo
             return $e;
         }
     }
-    public function consultarVuelos()
+    public function consultarVuelos($limit=20, $offset=1)
     {
         $conexion = new Conexion();
         $conexion->abrir();
         $vueloDAO = new VueloDAO();
         $vuelos = [];
         try {
-            $sql = $vueloDAO->consultarVuelos();
+            $sql = $vueloDAO->consultarVuelos($limit, $offset);
             $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
             while ($fila = $conexion->registro()) {
                 $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
@@ -211,14 +211,14 @@ class Vuelo
         return round($indice, 2);
     }
 
-    public function buscarVueloDestino($filtro)
+    public function buscarVueloDestino($filtro, $limit, $offset)
     {
         $conexion = new Conexion();
         $vueloDAO = new VueloDAO();
         $conexion->abrir();
         $vuelos = [];
         try {
-            $sql = $vueloDAO->buscarVuelo($filtro);
+            $sql = $vueloDAO->buscarVuelo($filtro, $limit, $offset);
             $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
             while ($fila = $conexion->registro()) {
                 $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
@@ -262,4 +262,57 @@ class Vuelo
             ":estado" => 1
         ];
     }
+
+    public function obtenerAsientosOcupados(): array
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO($this->idVuelo);
+        $sql =$vueloDAO->obtenerAsientosOcupados();
+        $conexion->ejecutar($sql['sql'],$sql['parametros']);
+        $asientos = [];
+
+        while ($fila = $conexion->registro()) {
+            $asientos[] = $fila[0];
+        }
+
+        $conexion->cerrar();
+        return $asientos;
+    }
+
+
+    public function asignarAsiento($claseDeseada)
+    {
+        
+        $capacidad = $this->avion->getCapacidad();
+
+
+        $primeraClase = round($capacidad * 0.25);
+        $business     = round($capacidad * 0.35);
+        $economica    = $capacidad - ($primeraClase + $business);
+
+
+        $rangos = [
+            "bus" => [1, $primeraClase],
+            "clas" => [$primeraClase + 1, $primeraClase + $business],
+            "eco" => [$primeraClase + $business + 1, $capacidad]
+        ];
+
+        list($inicio, $fin) = $rangos[$claseDeseada];
+
+
+        $ocupados = $this->obtenerAsientosOcupados();
+
+        $ocupadosSet = array_flip($ocupados);
+
+        for ($i = $inicio; $i <= $fin; $i++) {
+
+            if (!isset($ocupadosSet[$i])) {
+                return $i;
+            }
+        }
+
+        return null;
+    }
+
 }

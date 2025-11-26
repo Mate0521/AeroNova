@@ -133,11 +133,11 @@ class Ticket
 
         $productos = json_decode($datos, true);
         
-        $precioBrent = $productos["data"]["BRENT"]['price']; //aqui esta el precio del brent barril
+        $precioBrent = $productos["data"]["price"]; //aqui esta el precio del brent barril
         
         $vuelo =new Vuelo($this->vuelo);
         $vuelo->obtenerVueloId();
-        $duracion = $vuelo->getRuta()->getDuracionEstimada();
+        $duracion = $vuelo->getRuta()->convertirTimeAHoras();
 
         $costoCombustible = (($precioBrent/159*0.85)+0.20)*4*$duracion;//primera variable costo del combustible
         $costoOperacion = 180*$duracion; //segunda variable costo de operacion
@@ -178,4 +178,21 @@ class Ticket
             return $e;
         }
     }
+
+    public function crearTicket()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO("", $this->estado_ticket, $this->precio, $this->puesto, $this->pasajero, $this->vuelo);
+        try {
+            $sql = $ticketDAO->crearTicket();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $this->idTicket=$conexion->lastID();
+            $conexion->cerrar();
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
 }

@@ -1,14 +1,13 @@
 <?php
-include ("../../comoponet/AutomatizacionEstados.php");
-if(!isset($_SESSION['id'])){
-    if ($_SESSION['rol'] != 'pasajero') {
-        header("Location: ?pid=". base64_encode("Error"));
-    }
-    header("Location: ?pid=". base64_encode("Login"));
+if (!isset($_SESSION["id"])) {
+    header("Location: ?pid=" . base64_encode("Login"));
+    exit();
 }
 
-
-
+if ($_SESSION["rol"] !== "pasajero") {
+    header("Location: ?pid=" . base64_encode("Error"));
+    exit();
+}
 
 ?>
 <div class="card-body">
@@ -19,47 +18,78 @@ if(!isset($_SESSION['id'])){
         </div>
     </div>
 </div>
-<?php 
-include ("../Home.php");
-?>
+<div id="vuelos">
+
+</div>
+
+
 <script>
 
-$( "#filtro" ).on( "keyup", function() {
-    if($("#filtro").val().length >= 3){
+    let pagina = 1;
+    let cargando = false;
+    let fin = false;
+    let modoFiltro = false;  
+
+    function resetScroll() {
+        pagina = 1;
+        cargando = false;
+        fin = false;
+        $("#vuelos").html("");
+    }
+
+    function cargarVuelos() {
+        if (cargando || fin) return;
+
+        let filtro = $("#filtro").val().trim();
+        modoFiltro = filtro.length >= 3;
+
+        let address = modoFiltro? "ajax/BuscarVueloAjax.php": "ajax/cargarVuelos.php";
+
+        cargando = true;
+
         $.ajax({
-            url: 'ajax/BuscarVueloAjax.php',
-            type: 'POST',
-            data: { filtro: $("#filtro").val() },
-            success: function(response) {
-                $("#vuelos").html(response);
+            url: address,
+            type: "POST",
+            data: {
+                filtro: filtro,
+                pag: pagina
+            },
+            success: function(html) {
+
+                html = $.trim(html);
+
+                if (html === "") {
+                    fin = true;
+                    return;
+                }
+
+                $("#vuelos").append(html);
+
+                pagina++;
+                cargando = false;
             }
         });
     }
-});
 
-$(document).on("click", ".vuelo", function () {
-    
-    let id = $(this).data("id");
+    $("#filtro").on("keyup", function() {
+        let texto = $(this).val().trim();
 
-    $.ajax({
-        url: "ajax/planesVueloAjax.php",
-        type: "POST",
-        data: {
-            idVuelo: id
-        },
-        beforeSend: function () {
-            $("#planesVuelo").html(
-                "<div class='spinner-grow text-info' role='status'><span class='visually-hidden'>Loading...</span></div>"
-            );
-        },
-        success: function (response) {
-            $("#planesVuelo").html(response);
-        },
-        error: function () {
-            $("#planesVuelo").html("<div class='text-danger'>Error cargando el vuelo.</div>");
+        if (texto.length >= 3) {
+            resetScroll();
+            cargarVuelos();
+        } else {
+            cargarVuelos();
+
         }
     });
-});
 
+    $(window).on("scroll", function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
+            cargarVuelos();
+        }
+    });
+
+    cargarVuelos();
 
 </script>
+

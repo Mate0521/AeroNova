@@ -86,4 +86,12 @@ class Ruta
             return $e;
         }
     }
+
+    public function convertirTimeAHoras()
+    {
+        $time=$this->duracion_estimada;
+        list($h, $m, $s) = explode(":", $time);
+        return $h + ($m / 60) + ($s / 3600);
+    }
+
 }

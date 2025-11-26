@@ -30,7 +30,7 @@ $pages = [
     "Activar" => "views/Activacio.php",
     "panelAdmin"=>"views/sesionAdmin.php",
     "panelPiloto"=>"views/sesionPiloto.php",
-    "panelPasajero"=>"views/sesionPasajero.php",
+    "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
     "Login" => "views/autenticar.php",
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php"
 
@@ -40,7 +40,7 @@ $pages = [
 $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
 
 // Cerrar sesión
-if (isset($_GET["salir"])) {
+if (isset($_POST["cerrarSecion"])) {
     session_unset();
     session_destroy();
     header("Location: ?pid=" . base64_encode("Home"));
@@ -91,7 +91,7 @@ if (isset($_SESSION["rol"])) {
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
-    <body class="bg-black">
+    <body class="">
         <div>
             <?php
                 if ($page != "Login" && $page != "Registrar") { // paginas que no requieren que se muestre el menu
@@ -101,6 +101,7 @@ if (isset($_SESSION["rol"])) {
         </div>
         <div class="container mt-4 mb-4 text-center">
             <?php
+                
                 if (array_key_exists($page, $pages)) {
                     include($pages[$page]);
                 } else {

@@ -14,7 +14,7 @@ class EstadoDAO
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `g2_estado_vuelo  ` 
+                    FROM `g2_estado_vuelo` 
                     WHERE `idEstado_Vuelo`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado

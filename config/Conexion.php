@@ -10,7 +10,7 @@ class Conexion{
     private $username = "root";
     private $password = "";
 
-    //private $databadase = "	itiud_aplint2";
+    //private $databadase = "itiud_aplint2";
     //private $username = "itiud_aplint2";
     //private $password = "GYesgQ118&";
     
@@ -42,6 +42,10 @@ class Conexion{
 
     public function filas() {
         return $this->resultado->rowCount();
+    }
+
+    public function lastID(){
+        return $this->conexion->lastInsertId();
     }
 
 }
