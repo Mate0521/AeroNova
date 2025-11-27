@@ -1,14 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../modelo/Vuelo.php");
-require_once(__DIR__ . "/../modelo/Ticket.php");
-require_once(__DIR__ . "/../modelo/Pasajero.php");
-
-// lib
-require_once(__DIR__ . "/../libs/fpdf/fpdf.php");
-require_once(__DIR__ . "/../libs/phpqrcode/qrlib.php");
-
-
 if (!isset($_SESSION["id"])) {
     header("Location: ?pid=" . base64_encode("Login"));
     exit();
@@ -24,6 +15,7 @@ $clase   = trim($_POST["clase"]);
 $precioCliente = floatval($_POST["precio"]);
 $puesto  = trim($_POST["puesto"]);
 
+
 if ($idVuelo <= 0 || !in_array($clase, ["eco", "clas", "bus"])) {
     echo "<div class='alert alert-danger'>Datos inválidos</div>";
     exit();
@@ -32,6 +24,9 @@ if ($idVuelo <= 0 || !in_array($clase, ["eco", "clas", "bus"])) {
 
 $vuelo = new Vuelo($idVuelo);
 $vuelo->obtenerVueloId();
+
+$pilotoP = $vuelo->getPilotoPrincipal();
+$coPiloto= $vuelo->getCopiloto();
 
 
 $precioBase = floatval($_SESSION["v{$idVuelo}"]["precio"]);
@@ -43,8 +38,9 @@ $multiplicador = [
 
 $precioReal = $precioBase * $multiplicador[$clase] ;
 
+
 // Validación anti-hack
-if ($precioReal !== $precioCliente) {
+if (round($precioReal, 4 )!= round($precioCliente, 4)) {
     echo "<h3 style='color:red'>Error: El precio no coincide. Intente nuevamente.</h3>";
     exit();
 }
@@ -57,7 +53,7 @@ switch ($clase){
         $clase="clasica";
         break;
     case "bus":
-        $clase="Buisnes";
+        $clase="buisnes";
         break;
 }
 
@@ -77,17 +73,17 @@ if (!$ticket->getIdTicket()) {
     echo "<div class='alert alert-danger'>Error al guardar ticket.</div>";
     exit();
 }
+$ticketId=$ticket->getIdTicket();
 
-// ==== CREAR CARPETA DE TICKETS ====
-$dir = __DIR__ . "/../ticket";
+// carpeta
+$dir = __DIR__ . "/../../tickets";
 if (!is_dir($dir)) mkdir($dir, 0775, true);
 
-// ==== GENERAR QR ====
+//qr
 $qrFile = "{$dir}/qr_{$ticketId}.png";
 $qrData = "TICKET:{$ticketId}|USER:{$_SESSION['id']}|VUELO:{$idVuelo}";
 QRcode::png($qrData, $qrFile, QR_ECLEVEL_M, 5);
 
-// ==== CREAR PDF PROFESIONAL ====
 
 class PDF extends FPDF {
     function Header() {
@@ -111,13 +107,13 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Arial','',12);
 
-// ==== HEADER ====
+//head
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(0,6,"Ticket ID: ".$ticketId,0,1);
 $pdf->Cell(0,6,"Fecha Emisión: ".date("Y-m-d H:i:s"),0,1);
 $pdf->Ln(4);
 
-// ==== DATOS DEL PASAJERO ====
+//pasajero
 $pasajero = new Pasajero($_SESSION["id"]);
 $pasajero->obtenerPasajeroId();
 
@@ -131,7 +127,7 @@ $pdf->Cell(0,6,"Telefono: ".$pasajero->getTelefono(),0,1);
 $pdf->Cell(0,6,"Correo: ".$pasajero->getCorreo(),0,1);
 $pdf->Ln(4);
 
-// ==== DATOS DEL VUELO ====
+//datois vuelo
 $pdf->SetFont('Arial','B',13);
 $pdf->Cell(0,8,"Datos del Vuelo",0,1,'L',true);
 
@@ -145,22 +141,19 @@ $pdf->Cell(0,6,"Asiento: ".$puesto,0,1);
 $pdf->Cell(0,6,"Precio: $".number_format($precioReal,0,",","."),0,1);
 $pdf->Ln(4);
 
-// ==== TRIPULACIÓN ====
-
-$pilotoP = $vuelo->getPilotoPrincipal();
-$coPiloto= $vuelo->getCopiloto();
+//pilotos
 
 $pdf->SetFont('Arial','B',13);
 $pdf->Cell(0,8,"Tripulación",0,1,'L',true);
 
 $pdf->SetFont('Arial','',12);
 
-$pdf->Cell(0,6,"• ".$piloto->getNombre()." ".$piloto->getApellido(),0,1);
-$pdf->Cell(0,6,"• ".$coPiloto->getNombre()." ".$coPloto->getApellido(),0,1);
+$pdf->Cell(0,6,"• ". $pilotoP->getNombre()." ". $pilotoP->getApellido(),0,1);
+$pdf->Cell(0,6,"• ".$coPiloto->getNombre()." ".$coPiloto->getApellido(),0,1);
 
 $pdf->Ln(6);
 
-// ==== QR ====
+//qr
 $pdf->SetFont('Arial','B',13);
 $pdf->Cell(0,8,"Código QR del Ticket",0,1,'L',true);
 

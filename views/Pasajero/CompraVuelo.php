@@ -102,6 +102,7 @@ if ($vuelo === null && isset($_GET['idV'])) {
         <input type="hidden" name="idVuelo" value="<?= $idVuelo ?>">
         <input type="hidden" name="clase" value="<?= $clase ?>">
         <input type="hidden" name="precio" value="<?= $precio ?>">
+        <input type="hidden" name="puesto" value="<?= $puesto ?>">
         <button type="submit" class="btn btn-success btn-lg px-5">Comprar</button>
     </form>
 </div>

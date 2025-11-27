@@ -16,6 +16,8 @@ include_once("modelo/Piloto.php");
 include_once("modelo/Ruta.php");
 include_once("modelo/Ticket.php");
 include_once("modelo/Vuelo.php");
+require_once( "fpdf/fpdf.php");//pdf
+require_once("phpqrcode/qrlib.php");//qr
 
 
 
@@ -32,8 +34,8 @@ $pages = [
     "panelPiloto"=>"views/sesionPiloto.php",
     "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
     "Login" => "views/autenticar.php",
-    "reservarVuelo" => "views/Pasajero/CompraVuelo.php"
-
+    "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
+    "crearTikecket" => "views/Pasajero/CrearTikecket.php"
 ];
 
 // Página por defecto
@@ -53,21 +55,6 @@ $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "reservarVu
 if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     // Si no hay sesión y la vista no es pública, redirigir a Error
     if (!in_array($page, $vistasPublicas)) {
-        $page = "Error";
-    }
-}
-
-if (isset($_SESSION["rol"])) {
-
-    if ($_SESSION["rol"] == "admin" && $page != "panelAdmin" && !in_array($page, $vistasPublicas)) {
-        $page = "Error";
-    }
-
-    if ($_SESSION["rol"] == "piloto" && $page != "panelPiloto" && !in_array($page, $vistasPublicas)) {
-        $page = "Error";
-    }
-
-    if ($_SESSION["rol"] == "pasajero" && $page != "panelPasajero" && !in_array($page, $vistasPublicas)) {
         $page = "Error";
     }
 }
@@ -101,6 +88,7 @@ if (isset($_SESSION["rol"])) {
         </div>
         <div class="container mt-4 mb-4 text-center">
             <?php
+                var_dump($_SESSION);
                 
                 if (array_key_exists($page, $pages)) {
                     include($pages[$page]);
