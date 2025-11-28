@@ -75,5 +75,39 @@ class Piloto extends Persona{
         }
     }
 
+    public function actualizarPilotoInAir()
+    {
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pilotoDAO = new PilotoDAO($this->id);
+        try {
+            $sql=$pilotoDAO->actualizarPilotoInAir();
+            $conexion->ejecutar($sql['sql'],$sql['parametros']);
+            $conexion->cerrar();
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+
+    }
+
+    public function actualizarPilotoDisponible()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $pilotoDAO = new PilotoDAO($this->id);
+
+        try {
+            $sql = $pilotoDAO->actualizarPilotoDisponible();
+            $conexion->ejecutar($sql['sql'], $sql['parametros']);
+            $conexion->cerrar();
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+
 
 }

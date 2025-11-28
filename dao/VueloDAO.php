@@ -42,7 +42,8 @@ class VueloDAO
         return [
             "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
                     FROM `g2_vuelo`
-                    WHERE `Fecha` >= :fecha  AND `Hora_Despegue` >= :hora AND `Estado_Vuelo_idEstado_Vuelo` = :estado
+                    WHERE CONCAT(Fecha, ' ', Hora_Despegue) >= :ahora
+                    AND `Estado_Vuelo_idEstado_Vuelo` = :estado
                     ORDER BY `idVuelo`
                     LIMIT :limit 
                     OFFSET :offset",
@@ -62,8 +63,8 @@ class VueloDAO
                     JOIN `g2_ciudad` c1 ON r.Origen = c1.idCiudad
                     JOIN `g2_ciudad` c2 ON r.Destino = c2.idCiudad
                     WHERE (c1.Nombre LIKE :filtro1 OR c2.Nombre LIKE :filtro2) 
-                    AND `Estado_Vuelo_idEstado_Vuelo` = :estado
-                    AND `Fecha` >= :fecha  AND `Hora_Despegue` >= :hora
+                    AND CONCAT(Fecha, ' ', Hora_Despegue) >= :ahora 
+                    AND Estado_Vuelo_idEstado_Vuelo = :estado
                     ORDER BY `idVuelo`
                     LIMIT :limit 
                     OFFSET :offset"
@@ -88,4 +89,62 @@ class VueloDAO
             ]
         ];
     }
+
+    public function consultarVuelosProcesoAbordaje()
+    {
+        $ahora = new DateTime();
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
+                    FROM `g2_vuelo`
+                    WHERE TIMESTAMPDIFF(MINUTE, CONCAT(Fecha, ' ', Hora_Despegue), :ahora ) BETWEEN -:margen AND :margen1
+                    AND `Estado_Vuelo_idEstado_Vuelo` !=  2",
+            "parametros" => [
+                ":ahora"  => $ahora->format("Y-m-d H:i:s"),
+                ":margen" => 10,
+                ":margen1" => 10
+            ]
+        ];
+    }
+
+    public function actualizarVueloInAir()
+    {
+        return [
+            "sql"=>"UPDATE `g2_vuelo` 
+                SET `Estado_Vuelo_idEstado_Vuelo`= 2 
+                WHERE `idVuelo`= :vuelo",
+            "parametros"=>[
+                ":vuelo"=>$this->idVuelo
+            ]
+        ];
+    }
+
+    public function consultarVuelosFinalizar()
+    {
+        $ahora = new DateTime();
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo`
+                    FROM `g2_vuelo`
+                    WHERE TIMESTAMPDIFF(MINUTE, CONCAT(Fecha, ' ', Hora_Llegada), :ahora) 
+                            BETWEEN -:margen AND :margen1
+                    AND `Estado_Vuelo_idEstado_Vuelo` = 2",
+            "parametros" => [
+                ":ahora"  => $ahora->format("Y-m-d H:i:s"),
+                ":margen" => 10,
+                ":margen1" => 10
+            ]
+        ];
+    }
+
+    public function actualizarVueloFinalizado()
+        {
+            return [
+                "sql" => "UPDATE `g2_vuelo` 
+                        SET `Estado_Vuelo_idEstado_Vuelo` = 3 
+                        WHERE `idVuelo` = :vuelo",
+                "parametros" => [
+                    ":vuelo" => $this->idVuelo
+                ]
+            ];
+        }
+
 }

@@ -4,25 +4,38 @@ class Conexion{
     private $conexion;
     private $resultado;
     private $charset="utf8";
-    private $hosname = "localhost";
+    private $hosname;
+    private $database;
+    private $username;
+    private $password;
 
-    private $databadase = "aeropuerto";
-    private $username = "root";
-    private $password = "";
+    public function __construct()
+    {
+        $this->hosname = $_ENV["DB_HOST"] ?? "localhost";
+        $this->database = $_ENV["DB_NAME"] ?? "";
+        $this->username = $_ENV["DB_USER"] ?? "";
+        $this->password = $_ENV["DB_PASS"] ?? "";
+    }
 
-    //private $databadase = "itiud_aplint2";
-    //private $username = "itiud_aplint2";
-    //private $password = "GYesgQ118&";
-    
     function abrir(){
         try{
+            if ($_SERVER['REMOTE_ADDR'] == "::1") {
+                $databadase = "aeropuerto";
+                $username = "root";
+                $password = "";
+            } else {
+                $databadase = $this->database;
+                $username = $this->username;
+                $password = $this->password;
+            }
+
             $option = [
                 PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_EMULATE_PREPARES => false
             ];
-            $this->conexion = new PDO("mysql:host={$this->hosname};dbname={$this->databadase};charset={$this->charset}", 
-                                    $this->username, 
-                                    $this->password,
+            $this->conexion = new PDO("mysql:host={$this->hosname};dbname={$databadase};charset={$this->charset}", 
+                                    $username, 
+                                    $password,
                                     $option);
         }catch(PDOException $e){
             return $e->getMessage();

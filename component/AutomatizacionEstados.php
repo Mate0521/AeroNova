@@ -1,5 +1,5 @@
 <?php
-class PseudoCron {
+class AutomatizacionEstados {
 
     public static function run() {
 
@@ -15,7 +15,7 @@ class PseudoCron {
         $haceMinutos = (time() - strtotime($ultima)) / 60;
 
         // ejecutar cada 5 minutos
-        if ($haceMinutos >= 5) {
+        if ($haceMinutos >= 1) {
 
             // ACTUALIZAMOS INMEDIATAMENTE LA HORA
             file_put_contents($file, date("Y-m-d H:i:s"));
@@ -29,14 +29,57 @@ class PseudoCron {
         }
     }
 
-    // Aquí dentro irán todas las funciones con el SQL
     private static function activarCheckIn() 
     {
-        
+        $ticket=new Ticket();
+        $ticket->actualizacionCheckinOpen();
+
     }
-    private static function cerrarCheckIn() {}
-    private static function procesarAbordaje() {}
-    private static function finalizarVuelos() {}
+    private static function cerrarCheckIn() 
+    {
+        $ticket=new Ticket();
+        $ticket->actualizacionCheckinClose();
+    }
+    private static function procesarAbordaje() 
+    {
+        $vuelo=new Vuelo;
+        $vuelos=$vuelo->consultarVuelosProcesoAbordaje();
+        var_dump($vuelos);
+        foreach($vuelos as $v){
+
+            $v->actualizarVueloInAir();
+
+            $piloto =new Piloto($v->getPilotoPrincipal()->getId());
+            $piloto->actualizarPilotoInAir();
+
+            $coPiloto=new Piloto($v->getCopiloto()->getId());
+            $coPiloto->actualizarPilotoInAir();
+
+            //actualizar tikets
+            $ticket = new Ticket("","","","","",$v->getIdVuelo());
+            $ticket->actualizarTiketsInAir();
+
+        }
+
+    }
+    private static function finalizarVuelos()
+    {
+        $vuelo = new Vuelo();
+        $vuelos = $vuelo->consultarVuelosFinalizar();
+
+        foreach ($vuelos as $v) {
+
+            $v->actualizarVueloFinalizado();
+
+            $piloto = new Piloto($v->getPilotoPrincipal()->getId());
+            $piloto->actualizarPilotoDisponible();
+
+            $copiloto = new Piloto($v->getCopiloto()->getId());
+            $copiloto->actualizarPilotoDisponible();
+
+        }
+    }
+
 
 }
 

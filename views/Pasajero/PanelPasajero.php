@@ -10,7 +10,7 @@ if ($_SESSION["rol"] !== "pasajero") {
 }
 
 ?>
-<div class="card-body">
+<div class="card-body mb-4 mt-4">
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">

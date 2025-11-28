@@ -1,4 +1,6 @@
 <?php
+
+use Vtiful\Kernel\Format;
 // Unificar el nombre de sesión en TODA la app
 session_name("AERO_SESSION");
 session_start();
@@ -18,8 +20,14 @@ include_once("modelo/Ticket.php");
 include_once("modelo/Vuelo.php");
 require_once( "fpdf/fpdf.php");//pdf
 require_once("phpqrcode/qrlib.php");//qr
+require_once("component/AutomatizacionEstados.php");//cron
+require_once ("config/env.php");//clave_api
 
-
+try{
+    AutomatizacionEstados::run();
+}catch(Exception $e){
+    echo $e;
+}
 
 //este campo me sirvio para dar una capa mas de seguridad para quer 
 //no se pueda acceder a las vistas directamente ni que se viera la 
@@ -35,7 +43,10 @@ $pages = [
     "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
     "Login" => "views/autenticar.php",
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
-    "crearTikecket" => "views/Pasajero/CrearTikecket.php"
+    "crearTikecket" => "views/Pasajero/CrearTikecket.php",
+    "Checkin"=> "views/Pasajero/CheckIn.php",
+    "constTick" => "views\Pasajero\ConsultarTickets.php",
+    "dashboarad" => "views\Pasajero\Estadisticas.php"
 ];
 
 // Página por defecto
@@ -77,6 +88,8 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     <body class="">
         <div>
@@ -88,8 +101,6 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         </div>
         <div class="container mt-4 mb-4 text-center">
             <?php
-                var_dump($_SESSION);
-                
                 if (array_key_exists($page, $pages)) {
                     include($pages[$page]);
                 } else {

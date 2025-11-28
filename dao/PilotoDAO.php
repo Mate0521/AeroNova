@@ -35,7 +35,7 @@ class PilotoDAO{
         ];
     }
 
-        public function autenticar(){
+    public function autenticar(){
         return [
             "sql" => "select idPiloto
                 from g2_piloto
@@ -46,4 +46,29 @@ class PilotoDAO{
             ]
         ];
     }
+
+    public function actualizarPilotoInAir()
+    {
+        return [
+            "sql"=>"UPDATE `g2_piloto` 
+                SET `id_estado_piloto`= 2 
+                WHERE `idPiloto` = :piloto",
+            "parametros"=>[
+                ":piloto"=>$this->id
+            ]
+        ];     
+    }
+
+    public function actualizarPilotoDisponible()
+    {
+        return [
+            "sql" => "UPDATE `g2_piloto`
+                    SET `id_estado_piloto` = 1
+                    WHERE `idPiloto` = :piloto",
+            "parametros" => [
+                ":piloto" => $this->id
+            ]
+        ];
+    }
+
 }
