@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../dao/EstadoDAO.php');
+
 class Estado
 {
     private $idEstado;
@@ -29,22 +31,56 @@ class Estado
     }
 
     public function obtenerEstadoVueloId()
-    {
-        $conexion = new Conexion();
-        $conexion->abrir();
-        $estadoDAO = new EstadoDAO($this->idEstado, null);
-        try {
-            $sql = $estadoDAO->obtenerEstadoVueloId();
-            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
-            if ($fila = $conexion->registro()) {
-                $this->valor = $fila[0];
-            }
-            $conexion->cerrar();
-        } catch (Exception $e) {
-            $conexion->cerrar();
-            return $e;
+{
+    $conexion = new Conexion();
+    
+    $conexion->abrir();
+    $estadoDAO = new EstadoDAO($this->idEstado, null);
+    try {
+        $sql = $estadoDAO->obtenerEstadoVueloId();
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+        if ($fila = $conexion->registro()) {
+            $this->valor = $fila[0]; 
+        } else {
+            $this->valor = "Sin Estado"; 
         }
+        $conexion->cerrar();
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        $this->valor = "Error";
+        return $e;
     }
+}
+public function obtenerEstadoVuelo()
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $estadoDAO = new EstadoDAO(); // sin id, porque queremos todos
+
+    try {
+        // Obtenemos la consulta que trae todos los estados
+        $sql = $estadoDAO->obtenerEstadoVuelo(); 
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $estados = [];
+        while ($fila = $conexion->registro()) {
+            $estados[] = [
+                "id_estado" => $fila["id_estado"],
+                "nombre_estado" => $fila["Valor"]
+            ];
+        }
+
+        $conexion->cerrar();
+        return $estados;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return [];
+    }
+}
+
+
+
     public function obtenerEstadoTicketId()
     {
         $conexion = new Conexion();

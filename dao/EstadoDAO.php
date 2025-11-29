@@ -11,21 +11,31 @@ class EstadoDAO
     }
 
     public function obtenerEstadoVueloId()
-    {
-        return [
-            "sql" => "SELECT `Valor` 
-                    FROM `g2_estado_vuelo  ` 
-                    WHERE `idEstado_Vuelo`= :idEstado",
-            "parametros" => [
-                ":idEstado" => $this->idEstado
-            ]
-        ];
-    }
+{
+    return [
+        "sql" => "SELECT `Valor` 
+                  FROM `g2_estado_vuelo`
+                  WHERE `idEstado_Vuelo` = :idEstado",
+        "parametros" => [
+            ":idEstado" => $this->idEstado
+        ]
+    ];
+}
+public function obtenerEstadoVuelo()
+{
+    return [
+        "sql" => "SELECT idEstado_Vuelo AS id_estado, Valor 
+                  FROM g2_estado_vuelo",
+        "parametros" => [] 
+    ];
+}
+
+
     public function obtenerEstadoTicketId()
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `g2_estado_ticket`      
+                    FROM `g2_estado_vuelo`      
                     WHERE `idEstado_Ticket`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado
@@ -43,4 +53,15 @@ class EstadoDAO
             ]
         ];
     }
+    public function consultarVuelosPorEstado($estado)
+{
+    return [
+        "sql" => "SELECT idVuelo, Fecha, Hora_Despegue, Piloto_principal, Copiloto,
+                         Avion_Matricula, Ruta_idRuta, Hora_Llegada, Estado_Vuelo_idEstado_Vuelo
+                  FROM g2_vuelo
+                  WHERE Estado_Vuelo_idEstado_Vuelo = ?",
+        "parametros" => [$estado]
+    ];
+}
+
 }

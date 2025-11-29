@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../dao/CiudadDAO.php');
+require_once(__DIR__ . '/../config/Conexion.php');
 class Ciudad
 {
     private $idCiudad;
@@ -46,6 +48,28 @@ class Ciudad
         } catch (Exception $e) {
             $conexion->cerrar();
             return $e;
+        }
+    }
+    public function obtenerCiudades()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ciudadDAO = new CiudadDAO();
+        $ciudades = [];
+        try {
+            $sql = $ciudadDAO->obtenerCiudades();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $ciudades[] = [
+                    "idCiudad" => $fila[0],
+                    "nombre" => $fila[1]
+                ];
+            }
+            $conexion->cerrar();
+            return $ciudades;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return [];
         }
     }
 }

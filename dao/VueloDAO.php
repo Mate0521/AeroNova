@@ -45,4 +45,75 @@ class VueloDAO
             "parametros" => []
         ];
     }
+
+public function consultarVuelosPorPiloto($piloto)
+{
+    return [
+        "sql" => "SELECT idVuelo, Fecha, Hora_Despegue, Piloto_principal, Copiloto, Avion_Matricula, Ruta_idRuta, Hora_Llegada, Estado_Vuelo_idEstado_Vuelo
+                  FROM g2_vuelo
+                  WHERE Piloto_principal = ?",
+        "parametros" => [$piloto]
+    ];
+}
+    public function consultarVuelosPorEstado($idPiloto, $estado)
+{
+    return [
+        "sql" => "SELECT idVuelo, Fecha, Hora_Despegue, Piloto_principal, Copiloto,
+                         Avion_Matricula, Ruta_idRuta, Hora_Llegada, Estado_Vuelo_idEstado_Vuelo
+                  FROM g2_vuelo
+                  WHERE Estado_Vuelo_idEstado_Vuelo = ?
+                  AND Piloto_principal = ?",
+        "parametros" => [$estado, $idPiloto]
+    ];
+}
+
+public function CambiarEstado($idVuelo, $nuevoEstado) {
+    return [
+        "sql" => "UPDATE g2_vuelo 
+                  SET Estado_Vuelo_idEstado_Vuelo = :estado 
+                  WHERE idVuelo = :id",
+        "parametros" => [
+            ":estado" => $nuevoEstado,
+            ":id"     => $idVuelo
+        ]
+    ];
+}
+public function buscar($filtro)
+{
+    return [
+        "sql" => 
+        "SELECT v.idVuelo, v.Fecha, v.Hora_Despegue, v.Hora_Llegada,
+                p1.nombre AS piloto,
+                p2.nombre AS copiloto,
+                a.modelo, a.matricula, a.capacidad,
+                co.nombre AS origen,
+                cd.nombre AS destino,
+                r.idRuta,
+                e.valor AS estado
+        FROM g2_vuelo v
+        INNER JOIN g2_piloto p1 ON v.Piloto_principal = p1.idPiloto
+        INNER JOIN g2_piloto p2 ON v.Copiloto = p2.idPiloto
+        INNER JOIN g2_avion a ON v.Avion_Matricula = a.matricula
+        INNER JOIN g2_ruta r ON v.Ruta_idRuta = r.idRuta
+        INNER JOIN g2_ciudad co ON r.Origen = co.idCiudad
+        INNER JOIN g2_ciudad cd ON r.Destino = cd.idCiudad
+        INNER JOIN g2_estado_vuelo e ON v.Estado_Vuelo_idEstado_Vuelo = e.idEstado_Vuelo
+        WHERE p2.nombre LIKE ?
+           OR a.modelo LIKE ?
+           OR a.matricula LIKE ?
+           OR co.nombre LIKE ?
+           OR cd.nombre LIKE ?
+        ",
+        "parametros" => [
+            "%$filtro%",
+            "%$filtro%",
+            "%$filtro%",
+            "%$filtro%",
+            "%$filtro%"
+        ]
+    ];
+}
+
+
+
 }

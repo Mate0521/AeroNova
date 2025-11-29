@@ -21,4 +21,11 @@ class CiudadDAO
             ]
         ];
     }
+    public function obtenerCiudades()
+    {
+        return [
+            "sql" => "SELECT `idCiudad`, `Nombre` FROM `g2_ciudad`",
+            "parametros" => []
+        ];
+    }
 }

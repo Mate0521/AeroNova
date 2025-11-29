@@ -10,5 +10,4 @@ if (isset($_SESSION["mensaje"])) {
     unset($_SESSION["mensaje"]);
 }
 ?>
-<h1>Bienvenido Administrador</h1>
-<p>Contenido del panel…</p>
+

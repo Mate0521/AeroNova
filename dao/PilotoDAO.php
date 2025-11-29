@@ -26,7 +26,7 @@ class PilotoDAO{
 
     public function obtenerPilotoId(){
         return [
-            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `Foto`, `estado_cuenta`, `id_estado_piloto`
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `Foto`, `estado_cuenta`, `id_estado_piloto`,`Clave`
                     FROM `g2_piloto` 
                     WHERE `idPiloto`= :id",
             "parametros" => [
@@ -46,4 +46,15 @@ class PilotoDAO{
             ]
         ];
     }
+    public function actualizarClave() {
+    return [
+        "sql" => "UPDATE g2_piloto SET Clave = :clave WHERE idPiloto = :id",
+        "parametros" => [
+            ":clave" => md5($this->clave),
+            ":id" => $this->id
+        ]
+    ];
+}
+
+
 }

@@ -1,4 +1,11 @@
 <?php
+require_once(__DIR__ . '/../modelo/Avion.php');
+require_once(__DIR__ . '/../modelo/Ruta.php');
+require_once(__DIR__ . '/../modelo/Piloto.php');
+require_once(__DIR__ . '/../modelo/Estado.php');
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/VueloDAO.php');
+
 
 class Vuelo
 {
@@ -127,7 +134,7 @@ class Vuelo
 
                 $this->hora_llegada = $fila[6];
 
-                $estadoOB = new Estado($fila[7]);
+                $estadoOB = new Estado($fila[8]);
                 $estadoOB->obtenerEstadoVueloId();
                 $this->estado_vuelo = $estadoOB;
             }
@@ -147,7 +154,8 @@ class Vuelo
             $sql = $vueloDAO->consultarVuelos();
             $conexion->ejecutar($sql["sql"], $sql["parametros"]);
             while ($fila = $conexion->registro()) {
-                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[6], null);
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null,
+                 null, null, null, $fila[7], null);
 
                 $pilotoOB = new Piloto($fila[3]);
                 $pilotoOB->obtenerPilotoId();
@@ -178,5 +186,194 @@ class Vuelo
             return $e;
         }
     }
+
+    public function consultarVuelosPorPiloto($piloto)//lista de 5 vuelos
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarVuelosPorPiloto($piloto);
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8],null);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function consultarVuelosPorEstado($idPiloto, $estado)
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $vueloDAO = new VueloDAO();
+    $vuelos = [];
+
+    try {
+        // Obtenemos la consulta SQL y parámetros desde el DAO
+        $sql = $vueloDAO->consultarVuelosPorEstado($idPiloto, $estado);
+
+        // Ejecutamos la consulta
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        // Iteramos los resultados
+        while ($fila = $conexion->registro()) {
+
+            // Creamos el objeto Vuelo con los campos básicos
+            $vuelo = new Vuelo(
+                $fila[0], // idVuelo
+                $fila[1], // Fecha
+                $fila[2], // Hora_Despegue
+                null,
+                null,
+                null,
+                null,
+                $fila[7], // Hora_Llegada
+                null
+            );
+
+            // Piloto principal
+            $pilotoOB = new Piloto($fila[3]);
+            $pilotoOB->obtenerPilotoId();
+            $vuelo->setPilotoPrincipal($pilotoOB);
+
+            // Copiloto
+            $copilotoOB = new Piloto($fila[4]);
+            $copilotoOB->obtenerPilotoId();
+            $vuelo->setCopiloto($copilotoOB);
+
+            // Avión
+            $avionOB = new Avion($fila[5]);
+            $avionOB->obtenerAvionMatricula();
+            $vuelo->setAvion($avionOB);
+
+            // Ruta
+            $rutaOB = new Ruta($fila[6]);
+            $rutaOB->obtenerRutaId();
+            $vuelo->setRuta($rutaOB);
+
+            // Estado del vuelo
+            $estadoOB = new Estado($fila[8], null);
+            $estadoOB->obtenerEstadoVueloId();
+            $vuelo->setEstadoVuelo($estadoOB);
+
+            // Guardamos el vuelo en el array
+            $vuelos[] = $vuelo;
+        }
+
+        $conexion->cerrar();
+        return $vuelos;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
+    
+public function CambiarEstado($idVuelo, $nuevoEstado) {
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $vueloDAO = new VueloDAO();
+
+    try {
+
+        $sql = $vueloDAO->CambiarEstado($idVuelo, $nuevoEstado);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $conexion->cerrar();
+        return true;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
+public function buscar($filtro)
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+
+    $vueloDAO = new VueloDAO();
+    $consulta = $vueloDAO->buscar($filtro);
+    $conexion->ejecutar($consulta["sql"], $consulta["parametros"]);
+
+    $vuelos = array();
+
+    while (($tupla = $conexion->registro()) != null) {
+
+        // Piloto principal
+        $pilotoPrincipal = new Piloto($tupla[5]);
+        $pilotoPrincipal->obtenerPilotoId();
+
+        // Copiloto
+        $copiloto = new Piloto($tupla[6]);
+        $copiloto->obtenerPilotoId();
+
+        // Avión
+        $avion = new Avion($tupla[7]);
+        $avion->obtenerAvionMatricula();
+
+        // Ruta
+        $ruta = new Ruta($tupla[8]); // idRuta
+        $ruta->setOrigenNombre($tupla[9]);   // nombre origen
+        $ruta->setDestinoNombre($tupla[10]); // nombre destino
+
+        // Estado
+        $estado = new Estado($tupla[11]);
+        $estado->obtenerEstadoVueloId();
+
+        // Creamos el objeto Vuelo completo
+        $vuelo = new Vuelo(
+            $tupla[0], // idVuelo
+            $tupla[1], // fecha
+            $tupla[2], // hora despegue
+            $pilotoPrincipal,
+            $copiloto,
+            $avion,
+            $ruta,
+            $tupla[3], // hora llegada
+            $estado     // estado objeto
+        );
+
+        array_push($vuelos, $vuelo);
+    }
+
+    $conexion->cerrar();
+    return $vuelos;
+}
+
+
 
 }

@@ -1,43 +1,27 @@
 <?php
+require_once __DIR__ . '/../dao/AvionDAO.php';
+require_once __DIR__ . '/../config/Conexion.php';
+
 class Avion
 {
     private $matricula;
     private $modelo;
     private $capacidad;
 
-    //constructor
     public function __construct($matricula = null, $modelo = null, $capacidad = null)
     {
         $this->matricula = $matricula;
         $this->modelo = $modelo;
         $this->capacidad = $capacidad;
     }
-    //getters
-    public function getMatricula()
-    {
-        return $this->matricula;
-    }
-    public function getModelo()
-    {
-        return $this->modelo;
-    }
-    public function getCapacidad()
-    {
-        return $this->capacidad;
-    }
-    //setters
-    public function setMatricula($matricula)
-    {
-        $this->matricula = $matricula;
-    }
-    public function setModelo($modelo)
-    {
-        $this->modelo = $modelo;
-    }
-    public function setCapacidad($capacidad)
-    {
-        $this->capacidad = $capacidad;
-    }
+
+    public function getMatricula() { return $this->matricula; }
+    public function getModelo() { return $this->modelo; }
+    public function getCapacidad() { return $this->capacidad; }
+
+    public function setMatricula($matricula) { $this->matricula = $matricula; }
+    public function setModelo($modelo) { $this->modelo = $modelo; }
+    public function setCapacidad($capacidad) { $this->capacidad = $capacidad; }
 
     public function obtenerAvionMatricula()
     {
