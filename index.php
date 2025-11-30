@@ -45,8 +45,8 @@ $pages = [
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
     "crearTikecket" => "views/Pasajero/CrearTikecket.php",
     "Checkin"=> "views/Pasajero/CheckIn.php",
-    "constTick" => "views\Pasajero\ConsultarTickets.php",
-    "dashboarad" => "views\Pasajero\Estadisticas.php"
+    "constTick" => "views/Pasajero/ConsultarTickets.php",
+    "dashboarad" => "views/Pasajero/Estadisticas.php"
 ];
 
 // Página por defecto
