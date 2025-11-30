@@ -117,7 +117,9 @@ class Ticket
 
     public function calcularPrecioBase()
     {
-        $oilPriceKey = $_ENV["OILPRICE_KEY"];
+        $envFile = __DIR__ . "/../config/env.php";
+        $env = include $envFile;
+        $oilPriceKey = $env['OILPRICE_KEY'];
 
         $url = 'https://api.oilpriceapi.com/v1/prices/latest';
 
