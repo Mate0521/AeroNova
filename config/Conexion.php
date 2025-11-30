@@ -1,5 +1,4 @@
 <?php
-
 class Conexion {
     private $conexion;
     private $resultado;
@@ -11,31 +10,49 @@ class Conexion {
 
     public function __construct()
     {
-        // Obtener variables desde getenv(), que SÍ funciona en producción
+        // intenta primero .env.php si existe (más fiable en hosting)
+        $envFile = __DIR__ . "/.env.php";
+        if (file_exists($envFile)) {
+            $env = include $envFile;
+            $this->hostname = $env['DB_HOST'] ?? 'localhost';
+            $this->database = $env['DB_NAME'] ?? '';
+            $this->username = $env['DB_USER'] ?? '';
+            $this->password = $env['DB_PASS'] ?? '';
+            return;
+        }
+
+        // fallback a getenv()
         $this->hostname = getenv("DB_HOST") ?: "localhost";
-        $this->database = getenv("DB_NAME") ?: "aeropuerto";
-        $this->username = getenv("DB_USER") ?: "root";
+        $this->database = getenv("DB_NAME") ?: "";
+        $this->username = getenv("DB_USER") ?: "";
         $this->password = getenv("DB_PASS") ?: "";
-        var_dump($this);
     }
 
     public function abrir() {
+        // Si ya está abierta no volver a abrir
+        if ($this->conexion instanceof PDO) return;
+
         try {
+            // Detectar entorno local de forma fiable (opcional)
+            $esLocal = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1']);
 
-            // Localhost detectado por IP ::1
-            $database = $this->database;
-            $username = $this->username;
-            $password = $this->password;
-            
+            if ($esLocal && empty($this->database)) {
+                $database = "aeropuerto";
+                $username = "root";
+                $password = "";
+            } else {
+                $database = $this->database;
+                $username = $this->username;
+                $password = $this->password;
+            }
 
-            // Validación obligatoria
-            if (!$database || !$username) {
-                throw new Exception("Variables de entorno no cargadas. DB o USER vacío.");
+            if (empty($database) || empty($username)) {
+                throw new Exception("Credenciales DB incompletas. Host: {$this->hostname}, DB: {$database}, User: {$username}");
             }
 
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_EMULATE_PREPARES => false
+                PDO::ATTR_EMULATE_PREPARES => false,
             ];
 
             $this->conexion = new PDO(
@@ -46,8 +63,9 @@ class Conexion {
             );
 
         } catch (Exception $e) {
-            // Mostrar error claro temporalmente
-            die("❌ ERROR DE CONEXIÓN: " . $e->getMessage());
+            // Registrar error y re-lanzar para que el caller lo capture
+            error_log("[Conexion->abrir] " . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -56,24 +74,36 @@ class Conexion {
     }
 
     public function ejecutar($sql, $parametros = []) {
+        // Si la conexión no está abierta, intentamos abrirla
         if ($this->conexion === null) {
-            die("❌ ERROR: Conexión no abierta en ejecutar()");
+            try {
+                $this->abrir();
+            } catch (Exception $e) {
+                // enviar respuesta JSON amigable si es AJAX o lanzar
+                error_log("[Conexion->ejecutar] fallo al abrir conexion: " . $e->getMessage());
+                throw $e;
+            }
         }
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->execute($parametros);
-        $this->resultado = $stmt;
+        try {
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->execute($parametros);
+            $this->resultado = $stmt;
+        } catch (PDOException $pe) {
+            error_log("[Conexion->ejecutar] SQL error: " . $pe->getMessage() . " -- SQL: " . $sql);
+            throw $pe;
+        }
     }
 
     public function registro() {
-        return $this->resultado->fetch();
+        return $this->resultado ? $this->resultado->fetch(PDO::FETCH_NUM) : false;
     }
 
     public function filas() {
-        return $this->resultado->rowCount();
+        return $this->resultado ? $this->resultado->rowCount() : 0;
     }
 
     public function lastID(){
-        return $this->conexion->lastInsertId();
+        return $this->conexion ? $this->conexion->lastInsertId() : null;
     }
 }
