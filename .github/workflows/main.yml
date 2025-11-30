@@ -16,7 +16,7 @@ jobs:
       - name: Crear archivo .env
         run: |
           echo "GOOGLE_MAPS_KEY=${{ secrets.GOOGLE_MAPS_KEY }}" > .env
-          echo "DROPBOX_KEY=${{ secrets.OILPRICE_KEY }}" >> .env
+          echo "OILPRICE_KEY=${{ secrets.OILPRICE_KEY }}" >> .env
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
