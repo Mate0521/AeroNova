@@ -16,6 +16,7 @@ class Conexion {
         $this->database = getenv("DB_NAME") ?: "aeropuerto";
         $this->username = getenv("DB_USER") ?: "root";
         $this->password = getenv("DB_PASS") ?: "";
+        var_dump($this);
     }
 
     public function abrir() {
