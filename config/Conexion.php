@@ -10,16 +10,6 @@ class Conexion {
 
     public function __construct()
     {
-        // intenta primero .env.php si existe (más fiable en hosting)
-        $envFile = __DIR__ . "/.env.php";
-        if (file_exists($envFile)) {
-            $env = include $envFile;
-            $this->hostname = $env['DB_HOST'] ?? 'localhost';
-            $this->database = $env['DB_NAME'] ?? '';
-            $this->username = $env['DB_USER'] ?? '';
-            $this->password = $env['DB_PASS'] ?? '';
-            return;
-        }
 
         // fallback a getenv()
         $this->hostname = getenv("DB_HOST") ?: "localhost";
