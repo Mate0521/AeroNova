@@ -20,7 +20,7 @@ include_once("modelo/Vuelo.php");
 require_once( "fpdf/fpdf.php");//pdf
 require_once("phpqrcode/qrlib.php");//qr
 require_once("component/AutomatizacionEstados.php");//cron
-require_once ("config/.env.php");//clave_api
+require_once ("config/env.php");//clave_api
 
 try{
     AutomatizacionEstados::run();
