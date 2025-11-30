@@ -1,12 +1,7 @@
 <?php
-<<<<<<< HEAD
-require_once(__DIR__ . '/../dao/CiudadDAO.php');
-require_once(__DIR__ . '/../config/Conexion.php');
-=======
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/../dao/CiudadDAO.php');
 
->>>>>>> feature/Mateo
 class Ciudad
 {
     private $idCiudad;

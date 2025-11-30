@@ -1,13 +1,9 @@
 <?php
-<<<<<<< HEAD
+
 require_once(__DIR__ . '/../dao/RutaDAO.php');
 require_once(__DIR__ . '/../modelo/Ciudad.php');
 require_once(__DIR__ . '/../config/Conexion.php');
 
-=======
-require_once(__DIR__ . '/../config/Conexion.php');
-require_once(__DIR__ . '/../dao/RutaDAO.php');
->>>>>>> feature/Mateo
 class Ruta
 {
     private $idRuta;
@@ -78,10 +74,6 @@ class Ruta
             return $e;
         }
     }
-<<<<<<< HEAD
-}
-?>
-=======
 
     public function convertirTimeAHoras()
     {
@@ -91,4 +83,4 @@ class Ruta
     }
 
 }
->>>>>>> feature/Mateo
+?>
