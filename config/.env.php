@@ -19,5 +19,5 @@ if (!function_exists("cargarEnv")) {
     }
 
     // cargar una sola vez
-    cargarEnv(__DIR__ . '/../../.env');
+    cargarEnv(__DIR__ . '/../.env');
 }
