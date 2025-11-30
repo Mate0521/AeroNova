@@ -24,8 +24,7 @@ class EstadoDAO
 public function obtenerEstadoVuelo()
 {
     return [
-        "sql" => "SELECT idEstado_Vuelo AS id_estado, Valor 
-                  FROM g2_estado_vuelo",
+        "sql" => "SELECT `idEstado_Vuelo`, `Valor` FROM `g2_estado_vuelo`",
         "parametros" => [] 
     ];
 }

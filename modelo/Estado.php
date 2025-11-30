@@ -68,8 +68,8 @@ public function obtenerEstadoVuelo()
         $estados = [];
         while ($fila = $conexion->registro()) {
             $estados[] = [
-                "id_estado" => $fila["id_estado"],
-                "nombre_estado" => $fila["Valor"]
+                "id_estado" => $fila[0],
+                "nombre_estado" => $fila[1]
             ];
         }
 
