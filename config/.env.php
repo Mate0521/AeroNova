@@ -1,30 +1,23 @@
-<?php 
-function cargarEnv($ruta) {
-    if (!file_exists($ruta)) {
-        return;
-    }
+<?php
 
-    $lineas = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+if (!function_exists("cargarEnv")) {
 
-    foreach ($lineas as $linea) {
+    function cargarEnv($ruta) {
+        if (!file_exists($ruta)) return;
 
-        // Ignorar comentarios
-        if (strpos(trim($linea), '#') === 0) {
-            continue;
+        $lines = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            if (strpos(trim($line), '#') === 0) continue;
+
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            $_ENV[$key] = $value;
+            putenv("$key=$value");
         }
-
-        // Separar clave=valor
-        list($clave, $valor) = explode('=', $linea, 2);
-
-        // Limpiar espacios y comillas
-        $clave = trim($clave);
-        $valor = trim($valor, " \t\n\r\0\x0B\"'");
-
-        // Guardar en variables globales
-        $_ENV[$clave] = $valor;
-        putenv("$clave=$valor");
     }
-}
 
-// Cargar en el arranque
-cargarEnv(__DIR__ . '/../.env');
+    // cargar una sola vez
+    cargarEnv(__DIR__ . '/../../.env');
+}
