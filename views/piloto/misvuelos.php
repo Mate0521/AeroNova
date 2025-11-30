@@ -33,7 +33,7 @@ $estados = $estadoObj->obtenerEstadoVuelo();
         <select id="selectEstado" class="form-select">
             <option value="">Seleccione un estado...</option>
             <?php foreach($estados as $e): ?>
-                <option value="<?= $e['id_estado'] ?>"><?= $e['nombre_estado'] ?></option>
+                <option value="<?= $e["id_estado"] ?>"><?= $e["nombre_estado"] ?></option>
             <?php endforeach; ?>
         </select>
 

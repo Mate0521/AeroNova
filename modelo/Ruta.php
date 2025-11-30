@@ -1,8 +1,9 @@
 <?php
-
+require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../dao/RutaDAO.php');
 require_once(__DIR__ . '/../modelo/Ciudad.php');
 require_once(__DIR__ . '/../config/Conexion.php');
+
 
 class Ruta
 {

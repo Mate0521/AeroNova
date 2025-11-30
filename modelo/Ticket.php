@@ -1,7 +1,8 @@
 <?php
+require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/../dao/TicketDAO.php');
-require_once (__DIR__."/../config/env.php");
+
 
 class Ticket
 {
@@ -116,7 +117,9 @@ class Ticket
 
     public function calcularPrecioBase()
     {
-        $oilPriceKey = $_ENV["OILPRICE_KEY"];
+        $envFile = __DIR__ . "/../config/env.php";
+        $env = include $envFile;
+        $oilPriceKey = $env['OILPRICE_KEY'];
 
         $url = 'https://api.oilpriceapi.com/v1/prices/latest';
 
@@ -476,7 +479,7 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, pasajero: $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
 
         $tickets = [];
 
@@ -514,7 +517,7 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, pasajero: $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
 
         try {
             $sql = $ticketDAO->destinosFrecuentes();
@@ -542,7 +545,7 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, pasajero: $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
 
         try {
             $sql = $ticketDAO->obtenerVuelosPorMes();

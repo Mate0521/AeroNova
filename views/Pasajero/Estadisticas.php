@@ -2,7 +2,7 @@
 $googleKey = $_ENV["GOOGLE_MAPS_KEY"];
 
 $pasajero = new Pasajero($_SESSION["id"]);
-$ticket = new Ticket(null, null, null, null, pasajero: $pasajero->getId());
+$ticket = new Ticket(null, null, null, null,    $pasajero->getId());
 
 $destinos = $ticket->obtenerDestinosFrecuentes();
 $meses = $ticket->obtenerVuelosPorMes();

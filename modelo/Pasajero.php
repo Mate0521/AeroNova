@@ -1,7 +1,10 @@
 <?php 
+require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/Persona.php'); 
 require_once(__DIR__ . '/../dao/PasajeroDAO.php');
+
+
 class Pasajero extends Persona{
     private $codigoVerificacion;
     private $estado_cuenta;
