@@ -3,10 +3,8 @@ class AutomatizacionEstados {
 
     public static function run() {
 
-        // archivo que guarda la última ejecución
         $file = __DIR__ . "/last-cron.txt";
 
-        // si el archivo no existe lo creamos
         if (!file_exists($file)) {
             file_put_contents($file, "2000-01-01 00:00:00");
         }
@@ -14,13 +12,10 @@ class AutomatizacionEstados {
         $ultima = file_get_contents($file);
         $haceMinutos = (time() - strtotime($ultima)) / 60;
 
-        // ejecutar cada 5 minutos
         if ($haceMinutos >= 1) {
 
-            // ACTUALIZAMOS INMEDIATAMENTE LA HORA
             file_put_contents($file, date("Y-m-d H:i:s"));
 
-            // EJECUTAMOS TODAS LAS TAREAS
             self::activarCheckIn();
             self::cerrarCheckIn();
             self::procesarAbordaje();
@@ -44,7 +39,6 @@ class AutomatizacionEstados {
     {
         $vuelo=new Vuelo;
         $vuelos=$vuelo->consultarVuelosProcesoAbordaje();
-        var_dump($vuelos);
         foreach($vuelos as $v){
 
             $v->actualizarVueloInAir();

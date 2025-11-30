@@ -57,22 +57,3 @@ foreach ($vuelos as $vuelo) :
     </div>
 </div>
 <?php endforeach ?>
-<script>
-    $(document).on("click", '[id^="reservar_"]', function () {
-        let id = $(this).data("id");
-
-        $.ajax({
-            url: "ajax/planesVueloAjax.php",
-            type: "POST",
-            data: { idVuelo: id },
-            beforeSend: function () {
-                $("#planesVuelo_"+id).html(
-                    "<div class='spinner-grow text-info'></div>"
-                );
-            },
-            success: function (response) {
-                $("#planesVuelo_"+id).html(response);
-            }
-        });
-    });
-</script>

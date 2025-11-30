@@ -62,7 +62,7 @@ if (isset($_POST["cerrarSecion"])) {
 
 
 //para que se pudiera acceder a vistas que no requiere la variable de session id
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "reservarVuelo"];
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin"];
 if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     // Si no hay sesión y la vista no es pública, redirigir a Error
     if (!in_array($page, $vistasPublicas)) {
@@ -101,6 +101,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         </div>
         <div class="container mt-4 mb-4 text-center">
             <?php
+                var_dump($_SESSION);
                 if (array_key_exists($page, $pages)) {
                     include($pages[$page]);
                 } else {
