@@ -134,7 +134,7 @@ class Vuelo
 
                 $this->hora_llegada = $fila[6];
 
-                $estadoOB = new Estado($fila[8]);
+                $estadoOB = new Estado($fila[7]);
                 $estadoOB->obtenerEstadoVueloId();
                 $this->estado_vuelo = $estadoOB;
             }

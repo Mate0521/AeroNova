@@ -90,14 +90,16 @@ if(isset($_SESSION["rol"])){
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
                                 </ul>
                             </li>
-                            <?php $userName = $admin->getNombre(); ?>
+                            <?php $userName = $admin->getNombre(); 
+                            $panel="PanelDatosPiloto"?>
 
                         <?php elseif($_SESSION["rol"] == "pasajero"): //pasajero?>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("panelPasajero") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Buscar Vuelos</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('dashboarad') ?>"><i class="bi bi-box-arrow-in-down-left"></i> Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("Checkin") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Check-in</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("constTick") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Consultar mis tikets</a></li>
-                            <?php $userName = $pasajero->getNombre() . " " . $pasajero->getApellido(); ?>
+                            <?php $userName = $pasajero->getNombre() . " " . $pasajero->getApellido(); 
+                            $panel="PanelDatosPiloto"?>
 
                         <?php elseif($_SESSION["rol"] == "piloto"): //piloto?>
                             <li class="nav-item">
@@ -112,7 +114,8 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-clock-history"></i> Historial
                                 </a>
                             </li>
-                            <?php $userName = $piloto->getNombre() . " " . $piloto->getApellido(); ?>
+                            <?php $userName = $piloto->getNombre() . " " . $piloto->getApellido(); 
+                            $panel="PanelDatosPiloto"?>
                         <?php endif; ?>
 
                         <li class="nav-item dropdown mt-3">
@@ -120,7 +123,7 @@ if(isset($_SESSION["rol"])){
                                 <i class="bi bi-person-circle"></i> <?= $userName ?>
                             </a>
                             <ul class="dropdown-menu text-center">
-                                <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Datos Personales</a></li>
+                                <li><a class="dropdown-item" href="?pid=<?= base64_encode($panel) ?>">Datos Personales</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="?pid=<?= base64_encode('Home') ?>" method="POST">

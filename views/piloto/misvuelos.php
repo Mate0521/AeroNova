@@ -72,7 +72,7 @@ $(document).ready(function() {
             return;
         }
 
-        $.post("../ajax/listaVuelos.php", 
+        $.post("ajax/listaVuelos.php", 
         { 
             estado: estado,
             idPiloto: idPiloto 
