@@ -10,7 +10,6 @@ class Conexion {
 
     public function __construct()
     {
-
         // fallback a getenv()
         $this->hostname = getenv("DB_HOST") ?: "localhost";
         $this->database = getenv("DB_NAME") ?: "";
