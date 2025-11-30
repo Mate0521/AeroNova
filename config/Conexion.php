@@ -28,6 +28,7 @@ class Conexion{
                 $username = $this->username;
                 $password = $this->password;
             }
+            var_dump($databadase, $username, $password);
 
             $option = [
                 PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION,
