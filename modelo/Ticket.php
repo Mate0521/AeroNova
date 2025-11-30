@@ -542,7 +542,7 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, pasajero: $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
 
         try {
             $sql = $ticketDAO->obtenerVuelosPorMes();
