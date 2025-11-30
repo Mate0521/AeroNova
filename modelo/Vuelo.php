@@ -1,11 +1,12 @@
 <?php
+require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../modelo/Avion.php');
 require_once(__DIR__ . '/../modelo/Ruta.php');
 require_once(__DIR__ . '/../modelo/Piloto.php');
 require_once(__DIR__ . '/../modelo/Estado.php');
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/../dao/VueloDAO.php');
-require_once (__DIR__."/../config/.env.php");
+
 
 
 class Vuelo
