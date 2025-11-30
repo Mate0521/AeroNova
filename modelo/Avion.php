@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/../dao/AvionDAO.php');
+require_once (__DIR__."/../config/.env.php");
 
 class Avion
 {
