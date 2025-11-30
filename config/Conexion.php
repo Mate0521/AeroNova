@@ -22,15 +22,10 @@ class Conexion {
         try {
 
             // Localhost detectado por IP ::1
-            if ($_SERVER['REMOTE_ADDR'] == "::1") {
-                $database = "aeropuerto";
-                $username = "root";
-                $password = "";
-            } else {
-                $database = $this->database;
-                $username = $this->username;
-                $password = $this->password;
-            }
+            $database = $this->database;
+            $username = $this->username;
+            $password = $this->password;
+            
 
             // Validación obligatoria
             if (!$database || !$username) {
