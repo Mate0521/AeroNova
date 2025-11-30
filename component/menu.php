@@ -39,14 +39,12 @@ if(isset($_SESSION["rol"])){
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <?php if($_SESSION["rol"] == "admin"): //admin?>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i> Ver pilotos</a></li>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('CrearCamp') ?>"><i class="bi bi-database-add"></i> Ver usuarios</a></li>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('CrearEquipo') ?>">Ver aviones</a></li>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('EliminarCamp') ?>"><i class="bi bi-trash3"></i> Ver vuelos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Reporte</a></li>
                             <!-- rutas -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Rutas
+                                    <i class="bi bi-sign-turn-slight-left"></i> Pilotos
                                 </a>
                                 <ul class="dropdown-menu text-center">
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
@@ -55,7 +53,7 @@ if(isset($_SESSION["rol"])){
                             <!-- vuelos -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Rutas
+                                    <i class="bi bi-sign-turn-slight-left"></i> Pasajeros
                                 </a>
                                 <ul class="dropdown-menu text-center">
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
@@ -64,19 +62,21 @@ if(isset($_SESSION["rol"])){
                             <!-- aviones -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Rutas
+                                    <i class="bi bi-sign-turn-slight-left"></i> Vuelos
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Vuelo</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Eliminar Vuelo</a></li>
                                 </ul>
                             </li>
                             <!-- pilotos -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Rutas
+                                    <i class="bi bi-sign-turn-slight-left"></i> Aviones
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Aviones</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Nuevo avion</a></li>
                                 </ul>
 
 
@@ -87,9 +87,12 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Rutas
                                 </a>
                                 <ul class="dropdown-menu text-center">
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Rutas</a></li>
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
                                 </ul>
                             </li>
+
+                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Configuracion</a></li>
                             <?php $userName = $admin->getNombre(); 
                             $panel="PanelDatosPiloto"?>
 
