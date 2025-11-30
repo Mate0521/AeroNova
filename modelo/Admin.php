@@ -1,7 +1,6 @@
 <?php 
-
-require_once(__DIR__ . '/../dao/AdminDAO.php');
 require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/AdminDAO.php');
 require_once(__DIR__ . '/Persona.php');
 
 

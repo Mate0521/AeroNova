@@ -1,8 +1,13 @@
 <?php
+<<<<<<< HEAD
 require_once(__DIR__ . '/../dao/RutaDAO.php');
 require_once(__DIR__ . '/../modelo/Ciudad.php');
 require_once(__DIR__ . '/../config/Conexion.php');
 
+=======
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/../dao/RutaDAO.php');
+>>>>>>> feature/Mateo
 class Ruta
 {
     private $idRuta;
@@ -73,5 +78,17 @@ class Ruta
             return $e;
         }
     }
+<<<<<<< HEAD
 }
 ?>
+=======
+
+    public function convertirTimeAHoras()
+    {
+        $time=$this->duracion_estimada;
+        list($h, $m, $s) = explode(":", $time);
+        return $h + ($m / 60) + ($s / 3600);
+    }
+
+}
+>>>>>>> feature/Mateo

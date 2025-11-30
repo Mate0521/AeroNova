@@ -144,18 +144,17 @@ class Vuelo
             return $e;
         }
     }
-    public function consultarVuelos()//lista de 5 vuelos
+    public function consultarVuelos($limit=20, $offset=1)
     {
         $conexion = new Conexion();
         $conexion->abrir();
         $vueloDAO = new VueloDAO();
         $vuelos = [];
         try {
-            $sql = $vueloDAO->consultarVuelos();
-            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $sql = $vueloDAO->consultarVuelos($limit, $offset);
+            $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
             while ($fila = $conexion->registro()) {
-                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null,
-                 null, null, null, $fila[7], null);
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
 
                 $pilotoOB = new Piloto($fila[3]);
                 $pilotoOB->obtenerPilotoId();
@@ -187,6 +186,181 @@ class Vuelo
         }
     }
 
+    public function calcularOcupacion($cantTickets)
+    {
+
+        $capacidadAvion = $this->avion->getCapacidad();
+
+        $fechaVuelo = new DateTime($this->fecha . ' ' . $this->hora_despegue);
+        $hoy = new DateTime();
+        
+        if ($hoy > $fechaVuelo) return 100; 
+
+        $diasRestantes = (int)$hoy->diff($fechaVuelo)->format("%a");
+
+        
+        $ventanaRelevante = 90; 
+        $diasAjustados = min($diasRestantes, $ventanaRelevante);
+        
+        $normTiempo = (1 - ($diasAjustados / $ventanaRelevante)) * 100;
+
+        $normCapacidad = ($cantTickets / $capacidadAvion) * 100;
+        
+        if ($normCapacidad > 100) $normCapacidad = 100;
+
+        $pesoTiempo = 0.4;
+        $pesoCapacidad = 0.6;
+
+        $indice = ($normTiempo * $pesoTiempo) + ($normCapacidad * $pesoCapacidad);
+
+        return round($indice, 2);
+    }
+
+    public function buscarVueloDestino($filtro, $limit, $offset)
+    {
+        $conexion = new Conexion();
+        $vueloDAO = new VueloDAO();
+        $conexion->abrir();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->buscarVuelo($filtro, $limit, $offset);
+            $conexion->ejecutar($sql["sql"], array_merge($sql["parametros"], $this->vuelosDisponibles()));
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function vuelosDisponibles()
+    {
+        $hoy = new DateTime();
+        return [
+            ":ahora" => $hoy->format('Y-m-d H:i:s'),
+            ":estado" => 1
+        ];
+    }
+
+    public function obtenerAsientosOcupados(): array
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO($this->idVuelo);
+        $sql =$vueloDAO->obtenerAsientosOcupados();
+        $conexion->ejecutar($sql['sql'],$sql['parametros']);
+        $asientos = [];
+
+        while ($fila = $conexion->registro()) {
+            $asientos[] = $fila[0];
+        }
+
+        $conexion->cerrar();
+        return $asientos;
+    }
+
+
+    public function asignarAsiento($claseDeseada)
+    {
+        
+        $capacidad = $this->avion->getCapacidad();
+
+
+        $primeraClase = round($capacidad * 0.25);
+        $business     = round($capacidad * 0.35);
+        $economica    = $capacidad - ($primeraClase + $business);
+
+
+        $rangos = [
+            "bus" => [1, $primeraClase],
+            "clas" => [$primeraClase + 1, $primeraClase + $business],
+            "eco" => [$primeraClase + $business + 1, $capacidad]
+        ];
+
+        list($inicio, $fin) = $rangos[$claseDeseada];
+
+
+        $ocupados = $this->obtenerAsientosOcupados();
+
+        $ocupadosSet = array_flip($ocupados);
+
+        for ($i = $inicio; $i <= $fin; $i++) {
+
+            if (!isset($ocupadosSet[$i])) {
+                return $i;
+            }
+        }
+
+        return null;
+    }
+
+    public function consultarVuelosProcesoAbordaje()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarVuelosProcesoAbordaje();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+    
     public function consultarVuelosPorPiloto($piloto)//lista de 5 vuelos
     {
         $conexion = new Conexion();
@@ -373,6 +547,84 @@ public function buscar($filtro)
     $conexion->cerrar();
     return $vuelos;
 }
+
+    public function actualizarVueloInAir()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO($this->idVuelo);
+        try {
+            $sql=$vueloDAO->actualizarVueloInAir();
+            $conexion->ejecutar($sql['sql'],$sql['parametros']);
+            $conexion->cerrar();
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+
+    }
+    public function consultarVuelosFinalizar()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+
+        try {
+            $sql = $vueloDAO->consultarVuelosFinalizar();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+
+            $conexion->cerrar();
+            return $vuelos;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+    
+    public function actualizarVueloFinalizado()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO($this->idVuelo);
+
+        try {
+            $sql = $vueloDAO->actualizarVueloFinalizado();
+            $conexion->ejecutar($sql['sql'], $sql['parametros']);
+            $conexion->cerrar();
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
 
 
 

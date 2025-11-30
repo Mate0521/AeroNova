@@ -1,4 +1,7 @@
 <?php 
+require_once(__DIR__ . '/../config/Conexion.php');
+require_once(__DIR__ . '/Persona.php'); 
+require_once(__DIR__ . '/../dao/PasajeroDAO.php');
 class Pasajero extends Persona{
     private $codigoVerificacion;
     private $estado_cuenta;
@@ -43,7 +46,7 @@ class Pasajero extends Persona{
             // $asunto = "Regitro de cliente";
             // $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
             // $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
-            // $mensaje .= "http://.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
+            // $mensaje .= "http://p2.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
             // $opciones = array(
             //     "From" => "contacto@itiud.org",
             //     "Reply-To" => "no-responder@itiud.org"

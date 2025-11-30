@@ -32,14 +32,14 @@ if (isset($_POST["autenticar"])) {
         $_SESSION["id"] = $piloto->getId();
         $_SESSION["rol"] = "piloto";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid='. base64_encode('panelPiloto'));
+        header('Location: ?pid='. base64_encode('panelPiloto'));
         exit();
 
     } else if($pasajero->autenticar()){
         $_SESSION["id"] = $pasajero->getId();
         $_SESSION["rol"] = "pasajero";
         $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid='. base64_encode('panelPasajero'));
+        header('Location: ?pid='. base64_encode('panelPasajero'));
         exit();
 
     } 
@@ -49,74 +49,38 @@ if (isset($_POST["autenticar"])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autenticación - AeroNova</title>
+<div class="bg-light d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 380px; width: 100%;">
+        <div class="text-center mb-3">
+            <div class="display-4">✈️</div>
+            <h3 class="fw-bold text-primary">AeroNova</h3>
+            <p class="text-muted">Control de acceso</p>
+        </div>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+        <?php if ($error == 1): ?>
+            <div class="alert alert-danger text-center">
+                Correo o clave incorrectos
+            </div>
+        <?php endif; ?>
 
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+        <form method="post" action="?pid=<?php echo base64_encode('Login'); ?>">
 
-$error = 0;
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input type="email" class="form-control form-control-lg" name="correo" placeholder="Ingresa tu correo" required>
+            </div>
 
-if (isset($_POST["autenticar"])) {
-    $correo = $_POST["correo"] ?? '';
-    $clave  = $_POST["clave"] ?? '';
+            <div class="mb-4">
+                <label class="form-label">Clave</label>
+                <input type="password" class="form-control form-control-lg" name="clave" placeholder="Ingresa tu clave" required>
+            </div>
 
-    $admin = new Admin("", "", "", $correo, "", $clave);
-
-    if ($admin->autenticar()) {
-        $_SESSION["id"] = $admin->getId();
-        $_SESSION["rol"] = "admin";
-        $_SESSION["mensaje"] = "¡Credenciales correctas!";
-        header('Location: /?pid=' . base64_encode('panelAdmin'));
-        exit();
-    } else {
-        $error = 1;
-    }
-}
-?>
-
-<div class="card shadow-lg p-4" style="max-width: 380px; width: 100%;">
-    <div class="text-center mb-3">
-        <div class="display-4">✈️</div>
-        <h3 class="fw-bold text-primary">AeroNova</h3>
-        <p class="text-muted">Control de acceso</p>
+            <button type="submit" class="btn btn-primary btn-lg w-100" name="autenticar">
+                Iniciar sesión
+            </button>
+        </form>
+        <a href="?pid=<?php echo base64_encode("Registrar") ?>"></a>
     </div>
 
-    <?php if ($error == 1): ?>
-        <div class="alert alert-danger text-center">
-            Correo o clave incorrectos
-        </div>
-    <?php endif; ?>
-
-    <form method="post" action="/index.php?pid=<?php echo base64_encode('Login'); ?>">
-
-        <div class="mb-3">
-            <label class="form-label">Correo</label>
-            <input type="email" class="form-control form-control-lg" name="correo" placeholder="Ingresa tu correo" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label">Clave</label>
-            <input type="password" class="form-control form-control-lg" name="clave" placeholder="Ingresa tu clave" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg w-100" name="autenticar">
-            Iniciar sesión
-        </button>
-    </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
