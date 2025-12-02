@@ -43,4 +43,149 @@ class Avion
             return $e;
         }
     }
+
+    public function consultar()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $avionDAO = new AvionDAO();
+        try {
+            $sql = $avionDAO->consultar();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $aviones = [];
+            while ($fila = $conexion->registro()) {
+                $a = new Avion($fila[0],$fila[1],$fila[2]);
+                $aviones[]=$a;
+            }
+            $conexion->cerrar();
+            return $aviones;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function actualizarCampos($cambios)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+
+            $avionDAO = new AvionDAO(
+                $this->matricula,
+                isset($cambios["modelo"]) ? $cambios["modelo"] : null,
+                isset($cambios["capacidad"]) ? $cambios["capacidad"] : null
+            );
+
+            foreach ($cambios as $campo => $valorNuevo) {
+
+                switch ($campo) {
+
+                    case "modelo":
+                        $sql = $avionDAO->actualizarModelo();
+                        break;
+
+                    case "capacidad":
+                        $sql = $avionDAO->actualizarCapacidad();
+                        break;
+                }
+
+                $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            }
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return "error".$e;
+        }
+    }
+
+    public function obtenerHistorialVuelos()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $avionDAO = new AvionDAO($this->matricula);
+        
+        try {
+            $sql = $avionDAO->obtenerHistorialVuelos();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $vuelos = [];
+            
+            while ($fila = $conexion->registro()) {
+
+                $ciudadOrigen = new Ciudad($fila[4], $fila[5]);
+                $ciudadDestino = new Ciudad($fila[6], $fila[7]);
+                $ruta = new Ruta(null, null, null,
+                $ciudadOrigen, $ciudadDestino);
+
+                $estadoVuelo = new Estado($fila[8], $fila[9]);
+
+                $vuelo = new Vuelo($fila[0],$fila[1],$fila[2],null,null,null,
+                    $ruta,$fila[3],$estadoVuelo
+                );
+
+                $vuelos[] = $vuelo;
+            }
+
+            $conexion->cerrar();
+            return $vuelos;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return [];
+        }
+    }
+
+    public function obtenerSugerenciasModelos($texto)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $avionDAO = new AvionDAO();
+        try {
+            $sql = $avionDAO->buscarModelos($texto);
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $lista = [];
+
+            while ($fila = $conexion->registro()) {
+                $lista[] = $fila[0];
+            }
+
+            $conexion->cerrar();
+            return $lista;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return [];
+        }
+    }
+
+    public function crearAvion()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+            $avionDAO = new AvionDAO($this->matricula, $this->modelo, $this->capacidad);
+
+            $sql = $avionDAO->crear();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
+
+
+
 }

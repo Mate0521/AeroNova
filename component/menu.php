@@ -39,7 +39,7 @@ if(isset($_SESSION["rol"])){
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <?php if($_SESSION["rol"] == "admin"): //admin?>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("dashboarAdmin") ?>"><i class="bi bi-box-arrow-in-down-left"></i>Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Reporte</a></li>
                             <!-- rutas -->
                             <li class="nav-item dropdown">
@@ -56,7 +56,7 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Pasajeros
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('administrarPasajeros') ?>">Adminidtrar Pasajeros</a></li>
                                 </ul>
                             </li>
                             <!-- aviones -->
@@ -65,7 +65,7 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Vuelos
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Vuelo</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('') ?>">Crear Nueva Vuelo</a></li>
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Eliminar Vuelo</a></li>
                                 </ul>
                             </li>
@@ -75,8 +75,8 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Aviones
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Aviones</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Nuevo avion</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelAviones') ?>">Ver Aviones</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('addAvion') ?>">Nuevo avion</a></li>
                                 </ul>
 
 

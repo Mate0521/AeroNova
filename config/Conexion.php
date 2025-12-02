@@ -63,17 +63,6 @@ class Conexion {
     }
 
     public function ejecutar($sql, $parametros = []) {
-        // Si la conexión no está abierta, intentamos abrirla
-        if ($this->conexion === null) {
-            try {
-                $this->abrir();
-            } catch (Exception $e) {
-                // enviar respuesta JSON amigable si es AJAX o lanzar
-                error_log("[Conexion->ejecutar] fallo al abrir conexion: " . $e->getMessage());
-                throw $e;
-            }
-        }
-
         try {
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute($parametros);
@@ -95,4 +84,5 @@ class Conexion {
     public function lastID(){
         return $this->conexion ? $this->conexion->lastInsertId() : null;
     }
+
 }

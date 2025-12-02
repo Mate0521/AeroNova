@@ -1,4 +1,7 @@
 <?php
+session_name("AERO_SESSION");
+session_start();
+
 include_once(__DIR__ . "/../modelo/Avion.php");
 include_once(__DIR__ . "/../modelo/Piloto.php");
 include_once(__DIR__ . "/../modelo/Ciudad.php");
@@ -51,7 +54,7 @@ $vuelos = $vuelo->consultarVuelos($limit, $offset);
                     ?>
                             <div id="planesVuelo_<?php echo $v->getIdVuelo()?>">
                                 <div class="card-footer" >
-                                    <p class="btn btn-info w-100" id="reservar_<?php echo $v->getIdVuelo() ?>" data-id="<?php echo $vuelo->getIdVuelo() ?>">Reservar</p>
+                                    <p class="btn btn-info w-100" id="reservar_<?php echo $v->getIdVuelo() ?>" data-id="<?php echo $v->getIdVuelo() ?>">Reservar</p>
                                 </div>
                             </div>
                     <?php 

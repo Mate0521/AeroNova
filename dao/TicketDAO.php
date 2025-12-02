@@ -187,5 +187,15 @@ class TicketDAO
         ];
     }
 
+    public function obtenerTickets()
+    {
+        return [
+            "sql"=>"SELECT `idTicket`, `Estado_Ticket_idEstado_Ticket`, `Precio`, `Puesto`, 
+            `Pasajero_idPasajero`, `Vuelo_idVuelo`, `Check_in` 
+            FROM `g2_ticket`",
+            "parametros"=>[]
+        ];
+    }
+
 
 }

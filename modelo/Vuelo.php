@@ -628,6 +628,30 @@ public function buscar($filtro)
         }
     }
 
+    public function consultarVuelosLigh()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarVuelosLigh();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], $fila[3], 
+                $fila[4], $fila[5], $fila[6], $fila[7], $fila[8]);
+
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
 
 
 }

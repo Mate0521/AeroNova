@@ -41,12 +41,15 @@ $pages = [
     "PanelDatosPiloto" => "views/piloto/PanelDatosPiloto.php",
     "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php",
     "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
-    "Login" => "views/autenticar.php",
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
     "crearTikecket" => "views/Pasajero/CrearTikecket.php",
     "Checkin"=> "views/Pasajero/CheckIn.php",
     "constTick" => "views/Pasajero/ConsultarTickets.php",
-    "dashboarad" => "views/Pasajero/Estadisticas.php"
+    "dashboarad" => "views/Pasajero/Estadisticas.php",
+    "administrarPasajeros"=>"views/Admin/AdminPasajeros.php", 
+    "dashboarAdmin"=>"views/Admin/EstadisticasAdmin.php",
+    'PanelAviones'=>"views/Admin/PanelAviones.php",
+    'addAvion'=>"views/Admin/AdicionAvion.php"
 ];
 
 // Página por defecto
@@ -65,7 +68,7 @@ $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin"];
 
 // Vistas privadas por rol
 $privadasPorRol = [
-    "admin" => ["panelAdmin"],
+    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones'],
     "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto"],
     "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad"]
 ];
@@ -106,7 +109,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Charts -->
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body class="bg-black text-white">
@@ -120,6 +123,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         ?>
     </div>
 
+    
     <!-- CONTENIDO PRINCIPAL -->
     <div class="container mt-4 mb-4 text-center">
         <?php

@@ -33,7 +33,7 @@ function drawDestinosChart() {
     ]);
 
     let options = {
-        region: "CO",
+        region: "005",
         displayMode: "markers",
         colorAxis: { colors: ["lightblue", "blue"] }
     };

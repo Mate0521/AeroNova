@@ -205,15 +205,25 @@ public function buscar($filtro)
     }
 
     public function actualizarVueloFinalizado()
-        {
-            return [
-                "sql" => "UPDATE `g2_vuelo` 
-                        SET `Estado_Vuelo_idEstado_Vuelo` = 3 
-                        WHERE `idVuelo` = :vuelo",
-                "parametros" => [
-                    ":vuelo" => $this->idVuelo
-                ]
-            ];
-        }
+    {
+        return [
+            "sql" => "UPDATE `g2_vuelo` 
+                    SET `Estado_Vuelo_idEstado_Vuelo` = 3 
+                    WHERE `idVuelo` = :vuelo",
+            "parametros" => [
+                ":vuelo" => $this->idVuelo
+            ]
+        ];
+    }
+
+    public function consultarVuelosLigh()
+    {
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, 
+                                `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
+                    FROM `g2_vuelo`",
+            "parametros" => []
+        ];
+    }
 
 }

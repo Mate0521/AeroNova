@@ -477,7 +477,8 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null,
+         null, $this->pasajero);
 
         $tickets = [];
 
@@ -563,6 +564,37 @@ class Ticket
             return [];
         }
     }
+
+    public function obtenerTickets()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO();
+        try{
+            $sql = $ticketDAO->obtenerTickets();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $tickets =[];
+            while ($fila = $conexion->registro()) {
+                $t =new Ticket($fila[0], $fila[1], $fila[2], 
+                $fila[3], $fila[4], null, $fila[6]);
+
+                $vueloOB = new Vuelo($fila[5]);
+                $vueloOB->obtenerVueloId();
+                $t->setVuelo($vueloOB) ;
+
+
+                $tickets[] = $t;
+            }
+            $conexion->cerrar();
+            return $tickets;
+
+        }catch(Exception $e){
+            return $e;
+        }
+
+    }
+
+    
 
 
 

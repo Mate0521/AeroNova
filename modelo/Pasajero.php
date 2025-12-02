@@ -148,6 +148,103 @@ class Pasajero extends Persona{
         }
     }
 
+    public function consultar()
+    {
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pasajeroDAO = new PasajeroDAO();
+        try{
+            $sql=$pasajeroDAO->consultar();
+            $conexion->ejecutar($sql['sql'], $sql['parametros']);
+            $pasajeros = [];
+            while($fila=$conexion->registro()){
+                $p =new Pasajero($fila[0], $fila[1], $fila[2], $fila[3], $fila[4],"","",$fila[5]);
+                $pasajeros[] = $p;
+            }
+            $conexion->cerrar();
+            return $pasajeros;
+        }catch(Exception $e){
+            $conexion->cerrar();
+            return $e;
+
+        }
+
+    }
+    public function cambiarEstado()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $pasajeroDAO = new PasajeroDAO(
+            $this->id, "", "", "", "", "", "",
+            $this->estado_cuenta
+        );
+
+        $sql = $pasajeroDAO->cambiarEstado();
+        $conexion->ejecutar($sql['sql'], $sql['parametros']);
+
+        $this->estado_cuenta = $this->estado_cuenta == 1 ? 1 : 0;
+
+        $conexion->cerrar();
+    }
+
+    public function actualizarCampos($cambios)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+
+            // Creamos el DAO
+            $pasajeroDAO = new PasajeroDAO(
+                $this->id,
+                isset($cambios["nombre"]) ? $cambios["nombre"] : "",
+                isset($cambios["apellido"]) ? $cambios["apellido"] : "",
+                isset($cambios["correo"]) ? $cambios["correo"] : "",
+                isset($cambios["telefono"]) ? $cambios["telefono"] : ""
+            );
+
+            // Recorremos cada cambio y lo ejecutamos
+            foreach ($cambios as $campo => $valorNuevo) {
+
+                switch ($campo) {
+
+                    case "nombre":
+                        $sql = $pasajeroDAO->actualizarNombre();
+                        break;
+
+                    case "apellido":
+                        $sql = $pasajeroDAO->actualizarApellido();
+                        break;
+
+                    case "correo":
+                        $sql = $pasajeroDAO->actualizarCorreo();
+                        break;
+
+                    case "telefono":
+                        $sql = $pasajeroDAO->actualizarTelefono();
+                        break;
+
+                    default:
+                        continue;
+                }
+
+
+                $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            }
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
+
+
 
 
 
