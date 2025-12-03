@@ -79,7 +79,7 @@ if (isset($_POST["autenticar"])) {
                 Iniciar sesión
             </button>
         </form>
-        <a href="?pid=<?php echo base64_encode("Registrar") ?>"></a>
+        <a href="?pid=<?php echo base64_encode("Registrar") ?>">Registar</a>
     </div>
 
 </div>
