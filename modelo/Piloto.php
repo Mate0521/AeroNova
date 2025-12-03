@@ -3,17 +3,8 @@ require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../dao/PilotoDAO.php');
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/Persona.php');
-<<<<<<< HEAD
-
-=======
-<<<<<<< Updated upstream
-=======
 require_once(__DIR__ . '/Estado.php');
 
-
-
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 class Piloto extends Persona{
     
     private $estadoPiloto;
@@ -188,11 +179,6 @@ public function consultarVuelosPorFiltros($idPiloto, $filtro)
     return ["sql" => $sql, "parametros" => $param];
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> feature/Natalia
     public function actualizarPilotoInAir()
     {
         $conexion = new Conexion();
@@ -226,9 +212,6 @@ public function consultarVuelosPorFiltros($idPiloto, $filtro)
         }
     }
 
-<<<<<<< HEAD
-
-=======
 public function buscar($filtro)
 {
     $conexion = new Conexion();
@@ -321,9 +304,5 @@ public function agregarPiloto() {
         return false;
     }
 }
-
-
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 
 }

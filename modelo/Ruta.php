@@ -75,14 +75,6 @@ class Ruta
             return $e;
         }
     }
-<<<<<<< HEAD
-
-    public function convertirTimeAHoras()
-    {
-        $time=$this->duracion_estimada;
-        list($h, $m, $s) = explode(":", $time);
-        return $h + ($m / 60) + ($s / 3600);
-    }
 
     public function consultar()
     {
@@ -284,15 +276,6 @@ class Ruta
     }
 
 
-
-}
-?>
-=======
-<<<<<<< Updated upstream
-}
-?>
-=======
-
 public function convertirTimeAHoras() {
     $time = $this->duracion_estimada;
 
@@ -347,10 +330,6 @@ public function obtenerRutas()
     }
 }
 
-
-}
-
-    
+}   
 ?>
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
+

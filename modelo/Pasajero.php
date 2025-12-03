@@ -227,7 +227,7 @@ class Pasajero extends Persona{
                         break;
 
                     default:
-                        continue;
+                        continue 2;
                 }
 
 

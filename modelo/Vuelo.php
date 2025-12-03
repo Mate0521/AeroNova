@@ -545,11 +545,6 @@ public function buscar($filtro)
     return $vuelos;
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> feature/Natalia
     public function actualizarVueloInAir()
     {
         $conexion = new Conexion();
@@ -627,7 +622,6 @@ public function buscar($filtro)
             return $e;
         }
     }
-<<<<<<< HEAD
 
     public function consultarVuelosLigh()
     {
@@ -680,7 +674,12 @@ public function buscar($filtro)
             }
             $conexion->cerrar();
             return $vuelos;
-=======
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+    
 public function obtenerVuelo() {
     $conexion = new Conexion();
         $conexion->abrir();
@@ -720,16 +719,10 @@ public function obtenerVuelo() {
             $conexion->cerrar();
             return $vuelos;
 
->>>>>>> feature/Natalia
         } catch (Exception $e) {
             $conexion->cerrar();
             return $e;
         }
-<<<<<<< HEAD
-
-    }
-
-=======
 }
 
 
@@ -929,10 +922,6 @@ public function rechazarCopiloto($idVuelo) {
     $conexion->ejecutar($sql["sql"], $sql["parametros"]);
     $conexion->cerrar();
 }
-
-
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 
 
 }

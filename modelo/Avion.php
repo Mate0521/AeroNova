@@ -43,7 +43,6 @@ class Avion
             return $e;
         }
     }
-<<<<<<< HEAD
 
     public function consultar()
     {
@@ -60,7 +59,12 @@ class Avion
             }
             $conexion->cerrar();
             return $aviones;
-=======
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
     
 public function obtenerAviones() {
     $conexion = new Conexion();
@@ -80,12 +84,10 @@ public function obtenerAviones() {
             $conexion->cerrar();
             return $aviones;
 
->>>>>>> feature/Natalia
         } catch (Exception $e) {
             $conexion->cerrar();
             return $e;
         }
-<<<<<<< HEAD
     }
 
     public function actualizarCampos($cambios)
@@ -234,7 +236,5 @@ public function obtenerAviones() {
 
 
 
-=======
 }
->>>>>>> feature/Natalia
-}
+

@@ -25,7 +25,6 @@ class AvionDAO
             ]
         ];
     }
-<<<<<<< HEAD
     public function consultar()
     {
         return [
@@ -124,9 +123,6 @@ class AvionDAO
     }
 
 
-
-=======
-
     public function obtenerAviones()
     {
         return [
@@ -135,5 +131,4 @@ class AvionDAO
             "parametros" => []
         ];
     }
->>>>>>> feature/Natalia
 }

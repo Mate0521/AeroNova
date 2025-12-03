@@ -87,7 +87,7 @@ foreach ($vuelos as $v) {
     if ($v->getEstadoVuelo()->getIdEstado() == 8) {
         // Botón aceptar → llama a SolicitudCopiloto con accion=aceptar
         echo "$( '#aceptar".$v->getIdVuelo()."' ).on('click', function() {
-                var url = 'ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=aceptar&idCopiloto=".$idCopiloto."';
+                var url = '/ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=aceptar&idCopiloto=".$idCopiloto."';
                 $('#estado".$v->getIdVuelo()."').load(url);
                 $('#aceptar".$v->getIdVuelo()."').hide();
                 $('#rechazar".$v->getIdVuelo()."').hide();
@@ -95,7 +95,7 @@ foreach ($vuelos as $v) {
 
         // Botón rechazar → llama a SolicitudCopiloto con accion=rechazar
         echo "$( '#rechazar".$v->getIdVuelo()."' ).on('click', function() {
-                var url = 'ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=rechazar';
+                var url = '/ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=rechazar';
                 $('#estado".$v->getIdVuelo()."').load(url);
                 $('#aceptar".$v->getIdVuelo()."').hide();
                 $('#rechazar".$v->getIdVuelo()."').hide();

@@ -35,13 +35,7 @@ class PilotoDAO{
         ];
     }
 
-<<<<<<< HEAD
-    public function autenticar(){
-=======
-<<<<<<< Updated upstream
-        public function autenticar(){
-=======
-        public function obtenerPilotos(){
+    public function obtenerPilotos(){
         return [
             "sql" => "SELECT `idPiloto`, `Nombre`, `Apellido`, `Correo`, `Telefono`, `Foto`, `estado_cuenta`, `id_estado_piloto`, `Clave`
                     FROM `g2_piloto`",
@@ -50,8 +44,6 @@ class PilotoDAO{
     }
 
     public function autenticar(){
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
         return [
             "sql" => "select idPiloto
                 from g2_piloto
@@ -72,11 +64,6 @@ class PilotoDAO{
         ];
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> feature/Natalia
     public function actualizarPilotoInAir()
     {
         return [
@@ -100,8 +87,6 @@ class PilotoDAO{
             ]
         ];
     }
-<<<<<<< HEAD
-=======
 public function buscar($filtro)
 {
     return [
@@ -161,8 +146,5 @@ public function agregarPiloto() {
         ]
     ];
 }
-
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 
 }

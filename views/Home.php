@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-<div id="vuelos">
-  
-</div>
-
-<script>
-    let pagina = 1;
-    let cargando = false;
-    let fin = false;
-
-    function cargarVuelos() {
-        if (cargando || fin) return;
-
-        cargando = true;
-
-=======
-<<<<<<< Updated upstream
 <?php
 $vuelo = new Vuelo();
 $vuelos = $vuelo->consultarVuelos();
@@ -78,7 +61,6 @@ $vuelos = $vuelo->consultarVuelos();
         </div>
     </div>
 </div>
-=======
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -174,7 +156,7 @@ $vuelos = $vuelo->consultarVuelos();
 
 <!-- ========================= VUELOS ========================= -->
 <div class="container mt-4 pb-5">
-    <h2 class="text-center mb-4">✈️ Vuelos Disponibles</h2>
+    <h2 class="text-center mb-4">✈ Vuelos Disponibles</h2>
 
     <!-- Loader -->
     <div id="loader" class="text-center mb-4 d-none">
@@ -206,24 +188,11 @@ $vuelos = $vuelo->consultarVuelos();
 
         $("#loader").removeClass("d-none");
 
->>>>>>> feature/Natalia
         $.ajax({
             url: "ajax/cargarVuelos.php",
             type: "POST",
             data: { pag: pagina },
             success: function(html) {
-<<<<<<< HEAD
-
-                if ($.trim(html) === "") {
-                    fin = true;
-                    return;
-                }
-
-                $("#vuelos").append(html);
-
-                pagina++;
-                cargando = false;
-=======
                 if ($.trim(html) === "") {
                     fin = true;
                     $("#loader").addClass("d-none");
@@ -233,23 +202,12 @@ $vuelos = $vuelo->consultarVuelos();
                 pagina++;
                 cargando = false;
                 $("#loader").addClass("d-none");
->>>>>>> feature/Natalia
             }
         });
     }
 
     cargarVuelos();
 
-<<<<<<< HEAD
-    // Detectar el scroll
-    $(window).scroll(function () {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
-            cargarVuelos();
-        }
-    });
-
-</script>
-=======
     /* Scroll infinito */
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
@@ -260,5 +218,3 @@ $vuelos = $vuelo->consultarVuelos();
 
 </body>
 </html>
->>>>>>> Stashed changes
->>>>>>> feature/Natalia

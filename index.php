@@ -39,19 +39,12 @@ $pages = [
     "panelVuelos" => "views/piloto/misvuelos.php",
     "Login" => "views/autenticar.php",
     "PanelDatosPiloto" => "views/piloto/PanelDatosPiloto.php",
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-    "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php"
-=======
->>>>>>> feature/Natalia
     "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php",
     "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
     "crearTikecket" => "views/Pasajero/CrearTikecket.php",
     "Checkin"=> "views/Pasajero/CheckIn.php",
     "constTick" => "views/Pasajero/ConsultarTickets.php",
-<<<<<<< HEAD
     "dashboarad" => "views/Pasajero/Estadisticas.php",//--
     "administrarPasajeros"=>"views/Admin/AdminPasajeros.php", 
     "dashboarAdmin"=>"views/Admin/EstadisticasAdmin.php",
@@ -59,9 +52,7 @@ $pages = [
     'addAvion'=>"views/Admin/AdicionAvion.php",
     'PanelRutas'=>"views/Admin/PanelRutas.php",
     "addRuta"=>"views/Admin/AdicionRuta.php",
-    "addCiudad"=>"views/Admin/AdicionCiudad.php"
-=======
-    "dashboarad" => "views/Pasajero/Estadisticas.php",
+    "addCiudad"=>"views/Admin/AdicionCiudad.php",
     "PanelPilotoAdmin"=>"views/piloto/PanelPilotoAdmin.php",
     "SolicitarVuelo"=>"views/piloto/SolicitarVuelo.php",
     "verVuelosProgramados"=>"views/Vuelos/verVuelosProgramados.php",
@@ -70,8 +61,6 @@ $pages = [
     "PanelDatosPasajero"=>"views/Pasajero/PanelDatosPasajero.php",
     "vuelos"=>"views/Vuelos/Vuelos.php",
     "aviones"=>"views/Avion/Consultaraviones.php"
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 ];
 // Página por defecto
 $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
@@ -84,36 +73,15 @@ if (isset($_POST["cerrarSecion"])) {
     exit();
 }
 
-<<<<<<< HEAD
-// Vistas públicas que NO requieren sesión
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin"];
-=======
-<<<<<<< Updated upstream
-// Vistas públicas
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home"];
-=======
+
 // Vistas públicas que NO requieren sesión
 $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin","vuelos","aviones"];
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 
 // Vistas privadas por rol
 $privadasPorRol = [
-<<<<<<< HEAD
-    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad"],
-    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto"],
-    "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad"]
-=======
-<<<<<<< Updated upstream
-    "admin" => ["panelAdmin"],
-    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto","HistorialVuelosPiloto"],
-    "pasajero" => ["panelPasajero"]
-=======
-    "admin" => ["panelAdmin","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin"],
+    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin"],
     "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto", "solicitudcopiloto"],
     "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad","PanelDatosPasajero"]
->>>>>>> Stashed changes
->>>>>>> feature/Natalia
 ];
 
 

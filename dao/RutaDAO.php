@@ -28,8 +28,6 @@ class RutaDAO
             ]
         ];
     }
-
-<<<<<<< HEAD
     public function consultar()
     {
         return [
@@ -153,14 +151,15 @@ class RutaDAO
             "parametros" => [
                 ":idRuta" => $this->idRuta
             ]
-=======
+        ];
+    }
+    
     public function obtenerRutas()
     {
         return [
             "sql" => "SELECT `idRuta`,`Duracion_Estimada`, `Distancia_KM`, `Origen`, `Destino` 
                     FROM `g2_ruta` ",
             "parametros" => []
->>>>>>> feature/Natalia
         ];
     }
 }
