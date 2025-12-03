@@ -41,12 +41,11 @@ public function obtenerEstadoVuelo()
             ]
         ];
     }
-    public function obtenerEstadoPilotoId()
-    {
+public function obtenerEstadoPilotoId() {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `g2_estado_piloto`      
-                    WHERE `id_estado`= :idEstado",
+                      FROM `g2_estado_piloto`      
+                      WHERE `id_estado` = :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado
             ]
@@ -60,6 +59,13 @@ public function obtenerEstadoVuelo()
                   FROM g2_vuelo
                   WHERE Estado_Vuelo_idEstado_Vuelo = ?",
         "parametros" => [$estado]
+    ];
+}
+
+public function obtenerEstadoPilotoS() {
+    return [
+        "sql" => "SELECT id_estado, Valor FROM g2_estado_piloto",
+        "parametros" => []
     ];
 }
 

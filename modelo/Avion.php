@@ -43,6 +43,7 @@ class Avion
             return $e;
         }
     }
+<<<<<<< HEAD
 
     public function consultar()
     {
@@ -59,10 +60,32 @@ class Avion
             }
             $conexion->cerrar();
             return $aviones;
+=======
+    
+public function obtenerAviones() {
+    $conexion = new Conexion();
+        $conexion->abrir();
+        $avionDAO = new AvionDAO();
+        $aviones = [];
+
+        try {
+            $sql = $avionDAO->obtenerAviones();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            while ($fila = $conexion->registro()) {
+                $avion = new Avion($fila[0], $fila[1], $fila[2]);
+                $aviones[] = $avion;
+            }
+
+            $conexion->cerrar();
+            return $aviones;
+
+>>>>>>> feature/Natalia
         } catch (Exception $e) {
             $conexion->cerrar();
             return $e;
         }
+<<<<<<< HEAD
     }
 
     public function actualizarCampos($cambios)
@@ -211,4 +234,7 @@ class Avion
 
 
 
+=======
+}
+>>>>>>> feature/Natalia
 }

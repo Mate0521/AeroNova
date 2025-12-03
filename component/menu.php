@@ -5,14 +5,17 @@ if(isset($_SESSION["rol"])){
         case "admin":
             $admin = new Admin($_SESSION["id"]);
             $admin->obtenerAdminId();
+            $panel = "PanelDatosAdmin"; 
             break;
         case "pasajero":
             $pasajero = new Pasajero($_SESSION["id"]);
             $pasajero->obtenerPasajeroId();
+            $panel = "PanelDatosPasajero";
             break;
         case "piloto":
             $piloto = new Piloto($_SESSION["id"]);
             $piloto->obtenerPilotoId();
+            $panel = "PanelDatosPiloto";
             break;
         default:
             header('Location: index.php');
@@ -23,31 +26,26 @@ if(isset($_SESSION["rol"])){
 
 <header class="text-center p-3 sticky-top mb-4">
 <?php if(isset($_SESSION["rol"])): ?>
-    <nav class="navbar navbar-dark bg-black fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="?pid=<?= base64_encode('Home') ?>">AeroNova</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="offcanvas offcanvas-end text-white bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">AeroNova</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-
+    <?php if($_SESSION["rol"] == "admin"): ?>
+        <!-- Menú Admin -->
+        <nav class="navbar bg-body-tertiary fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="?pid=<?= base64_encode('Home') ?>">AeroNova</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <?php if($_SESSION["rol"] == "admin"): //admin?>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("dashboarAdmin") ?>"><i class="bi bi-box-arrow-in-down-left"></i>Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Reporte</a></li>
-                            <!-- rutas -->
+                            <!-- pilotos -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Pilotos
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> <?= $admin->getNombre() ?>
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelPilotoAdmin') ?>">Informacion Piloto</a></li>
                                 </ul>
                             </li>
                             <!-- vuelos -->
@@ -65,8 +63,8 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Vuelos
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('') ?>">Crear Nueva Vuelo</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Eliminar Vuelo</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('SolicitarVuelo') ?>">Asignar vuelos</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('verVuelosProgramados') ?>">asignar copiloto</a></li>
                                 </ul>
                             </li>
                             <!-- pilotos -->
@@ -78,8 +76,6 @@ if(isset($_SESSION["rol"])){
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelAviones') ?>">Ver Aviones</a></li>
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('addAvion') ?>">Nuevo avion</a></li>
                                 </ul>
-
-
                             </li>
                             <!-- usuarios -->
                             <li class="nav-item dropdown">
@@ -92,23 +88,26 @@ if(isset($_SESSION["rol"])){
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode("addCiudad") ?>">Crear Nueva Ciudad Aeroportuaria</a></li>
                                 </ul>
                             </li>
-
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Configuracion</a></li>
                             <?php $userName = $admin->getNombre(); 
-                            $panel="PanelDatosPiloto"?>
+                          ?>
 
                         <?php elseif($_SESSION["rol"] == "pasajero"): //pasajero?>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("panelPasajero") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Buscar Vuelos</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('dashboarad') ?>"><i class="bi bi-box-arrow-in-down-left"></i> Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("Checkin") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Check-in</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("constTick") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Consultar mis tikets</a></li>
-                            <?php $userName = $pasajero->getNombre() . " " . $pasajero->getApellido(); 
-                            $panel="PanelDatosPiloto"?>
+                            <?php $userName = $pasajero->getNombre() . " " . $pasajero->getApellido(); ?>
 
                         <?php elseif($_SESSION["rol"] == "piloto"): //piloto?>
                             <li class="nav-item">
                                 <a class="nav-link" href="?pid=<?= base64_encode('panelVuelos') ?>">
                                     <i class="bi bi-box-arrow-in-down-left"></i> Mis Vuelos
+                                </a>
+                            </li>
+
+                             <li class="nav-item">
+                                <a class="nav-link" href="?pid=<?= base64_encode('solicitudcopiloto') ?>">
+                                    <i class="bi bi-box-arrow-in-down-left"></i> Solicitudes copiloto
                                 </a>
                             </li>
 
@@ -119,7 +118,8 @@ if(isset($_SESSION["rol"])){
                                 </a>
                             </li>
                             <?php $userName = $piloto->getNombre() . " " . $piloto->getApellido(); 
-                            $panel="PanelDatosPiloto"?>
+                            
+                            ?>
                         <?php endif; ?>
 
                         <li class="nav-item dropdown mt-3">
@@ -139,16 +139,15 @@ if(isset($_SESSION["rol"])){
                     </ul>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 <?php else: ?>
-    <nav class="navbar navbar-dark bg-black fixed-top">
+    <!-- Menú público -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="?pid=<?= base64_encode('Home') ?>">AeroNova</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="offcanvas offcanvas-end text-white bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">AeroNova</h5>
@@ -159,10 +158,10 @@ if(isset($_SESSION["rol"])){
                         <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("Checkin") ?>">Check-in</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Ofertas y Destinos</a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Informacion sobre vuelos y aviones</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Vuelos</a></li>
-                                <li><a class="dropdown-item" href="#">Rutas</a></li>
+                                <li><a class="dropdown-item" href="?pid=<?= base64_encode('vuelos') ?>">Vuelos</a></li>
+                                <li><a class="dropdown-item" href="?pid=<?= base64_encode("aviones")?>">Aviones</a></li>
                             </ul>
                         </li>
                     </ul>

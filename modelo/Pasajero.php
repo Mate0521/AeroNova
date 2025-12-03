@@ -124,6 +124,7 @@ class Pasajero extends Persona{
                 $this->correo = $fila[2];
                 $this->telefono = $fila[3];
                 $this->estado_cuenta = $fila[4];
+                $this->clave  = $fila[5];
             }
             $conexion -> cerrar();
         } catch (Exception $e) {

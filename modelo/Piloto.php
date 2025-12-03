@@ -3,7 +3,17 @@ require_once (__DIR__."/../config/env.php");
 require_once(__DIR__ . '/../dao/PilotoDAO.php');
 require_once(__DIR__ . '/../config/Conexion.php');
 require_once(__DIR__ . '/Persona.php');
+<<<<<<< HEAD
 
+=======
+<<<<<<< Updated upstream
+=======
+require_once(__DIR__ . '/Estado.php');
+
+
+
+>>>>>>> Stashed changes
+>>>>>>> feature/Natalia
 class Piloto extends Persona{
     
     private $estadoPiloto;
@@ -63,6 +73,46 @@ public function obtenerPilotoId(){
         return $e;
     }
 }
+
+    public function obtenerPilotos() {
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $pilotoDAO = new PilotoDAO();
+    $pilotos = [];
+
+    try {
+        $sql = $pilotoDAO->obtenerPilotos();
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        while ($fila = $conexion->registro()) {
+            $estadoOB = new Estado($fila[6]);
+            $estadoOB->obtenerEstadoPilotoId();
+
+            $piloto = new Piloto(
+                $fila[0], // ✅ idPiloto
+    $fila[1], // nombre
+    $fila[2], // apellido
+    $fila[3], // correo
+    $fila[4], // telefono
+    $fila[8], // clave
+    $fila[5], // foto
+    $fila[6], // estadoCuenta
+    $estadoOB // estadoPiloto             // estadoPiloto (objeto)
+            );
+
+            $pilotos[] = $piloto;
+        }
+
+        $conexion->cerrar();
+        return $pilotos;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
+
 
 
     public function autenticar(){
@@ -138,6 +188,11 @@ public function consultarVuelosPorFiltros($idPiloto, $filtro)
     return ["sql" => $sql, "parametros" => $param];
 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> feature/Natalia
     public function actualizarPilotoInAir()
     {
         $conexion = new Conexion();
@@ -171,6 +226,104 @@ public function consultarVuelosPorFiltros($idPiloto, $filtro)
         }
     }
 
+<<<<<<< HEAD
 
+=======
+public function buscar($filtro)
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+
+    $pilotoDAO = new PilotoDAO();
+    $consulta = $pilotoDAO->buscar($filtro);
+
+    $conexion->ejecutar($consulta["sql"], $consulta["parametros"]);
+
+    $pilotos = [];
+
+    while ($tupla = $conexion->registro()) {
+        // $tupla[7] = id_estado_piloto
+        // $tupla[8] = valor del estado
+
+        $estadoObj = new Estado($tupla[7], $tupla[8]);
+
+        $piloto = new Piloto(
+            $tupla[0], // idPiloto
+            $tupla[1], // nombre
+            $tupla[2], // apellido
+            $tupla[3], // correo
+            $tupla[4], // telefono
+            null,      // clave NO viene en esta consulta
+            $tupla[5], // foto
+            $tupla[6], // estado_cuenta
+            $estadoObj // objeto Estado en vez de string
+        );
+
+        $pilotos[] = $piloto;
+    }
+
+    $conexion->cerrar();
+    return $pilotos;
+}
+
+
+public function actualizarEstado($idPiloto, $idEstado)
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+
+    $pilotoDAO = new PilotoDAO();
+    $sql = $pilotoDAO->actualizarEstado($idPiloto, $idEstado);
+
+    try {
+        $parametros = [$idEstado, $idPiloto];
+        $conexion->ejecutar($sql["sql"], $parametros);
+
+        $filas = $conexion->filas();
+
+        $conexion->cerrar();
+
+        return $filas > 0;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        error_log("[Piloto->actualizarEstado] Error: " . $e->getMessage());
+        return false;
+    }
+}
+public function agregarPiloto() {
+    $conexion = new Conexion();
+    $conexion->abrir();
+
+    $dao = new PilotoDAO(
+    $this->id,
+    $this->nombre,
+    $this->apellido,
+    $this->correo,
+    $this->telefono,
+    md5("123"),          // ← contraseña por defecto
+    $this->foto,
+    null,
+    $this->estadoPiloto
+);
+
+
+    $sql = $dao->agregarPiloto();
+
+    try {
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+        // Si no lanza excepción, asumimos éxito
+        $conexion->cerrar();
+        return true;
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        error_log("[Piloto->agregarPiloto] Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+>>>>>>> Stashed changes
+>>>>>>> feature/Natalia
 
 }

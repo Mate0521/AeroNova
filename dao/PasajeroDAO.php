@@ -59,7 +59,7 @@ class PasajeroDAO
     }
     public function obtenerPasajeroId(){
         return [
-            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta`,`Clave`
                     FROM `g2_pasajero` 
                     WHERE `idPasajero`= :id",
             "parametros" => [

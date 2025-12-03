@@ -1,33 +1,25 @@
 <?php 
-require_once(__DIR__ . '/../modelo/Vuelo.php');
-require_once(__DIR__ . '/../modelo/Avion.php');
-require_once(__DIR__ . '/../modelo/Ruta.php');
-require_once(__DIR__ . '/../modelo/Piloto.php');
-require_once(__DIR__ . '/../modelo/Estado.php');
 
-// Validaciones
-if (!isset($_POST["estado"])) {
-    echo "<p>No llegó el estado</p>";
-    exit();
-}
+require_once(__DIR__ . "/../../config/Conexion.php");
+require_once(__DIR__ . "/../../modelo/Piloto.php");
+require_once(__DIR__ . "/../../modelo/Avion.php");
+require_once(__DIR__ . "/../../modelo/Ruta.php");
+require_once(__DIR__ . "/../../modelo/Estado.php");
+require_once(__DIR__ . "/../../modelo/Vuelo.php");
 
-if (!isset($_POST["idPiloto"])) {
-    echo "<p>No llegó el ID del piloto</p>";
-    exit();
-}
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-$estado = $_POST["estado"];
-$idPiloto = $_POST["idPiloto"];
-
+$idCopiloto = $_SESSION["id"]; 
 $vuelo = new Vuelo();
-$vuelos = $vuelo->consultarVuelosPorEstado($idPiloto, $estado);
+
+// Traer vuelos en estado 8 (Pendiente por copiloto)
+$vuelos = $vuelo->consultarVuelosPendienteCopiloto($idCopiloto, 8);
 
 if (!$vuelos || count($vuelos) == 0) {
-    echo "<p>No hay vuelos con ese estado</p>";
+    echo "<p>No tienes solicitudes pendientes como copiloto</p>";
     exit();
 }
 
-// Tabla con diseño moderno
 echo '<div class="table-responsive">
 <table class="table table-striped table-hover table-bordered text-light bg-dark align-middle">
     <thead class="table-secondary text-dark">
@@ -58,25 +50,17 @@ foreach ($vuelos as $v) {
         <td>{$v->getHoraDespegue()}</td>
         <td>{$v->getHoraLlegada()}</td>
         <td>{$piloto->getNombre()}</td>
-        <td>{$copiloto->getNombre()}</td>
-        <td>{$avion->getModelo()} ({$avion->getMatricula()}, Cap: {$avion->getCapacidad()})</td>
-        <td>{$ruta->getOrigen()->getNombre()} → {$ruta->getDestino()->getNombre()} ({$ruta->getDistanciaKM()} km)</td>
+        <td>".($copiloto ? $copiloto->getNombre() : "Sin asignar")."</td>
+        <td>{$avion->getModelo()} ({$avion->getMatricula()})</td>
+        <td>{$ruta->getOrigen()->getNombre()} → {$ruta->getDestino()->getNombre()}</td>
         <td>
             <div id='estado{$v->getIdVuelo()}'>";
 
-           if ($estadoVuelo->getIdEstado() == 6) {
-                echo "<div class='d-inline-flex align-items-center px-3 py-1 rounded-pill bg-warning text-dark shadow-sm'>
-                        <i class='bi bi-exclamation-circle me-1'></i> Solicitado
-                      </div>";
-           } else {
-                echo "<div class='d-inline-flex align-items-center px-3 py-1 rounded-pill bg-info text-dark shadow-sm'>
-                        <i class='bi bi-info-circle me-1'></i> {$estadoVuelo->getValor()}
-                      </div>";
-           }
+    if ($estadoVuelo->getIdEstado() == 8) {
+        echo "<div class='d-inline-flex align-items-center px-3 py-1 rounded-pill bg-warning text-dark shadow-sm'>
+                <i class='bi bi-person-plus me-1'></i> Pendiente por copiloto
+              </div>";
 
-    echo "</div>";
-
-    if ($estadoVuelo->getIdEstado() == 6) {
         echo "<div class='d-flex gap-1 mt-1'>
             <button id='aceptar{$v->getIdVuelo()}' class='btn btn-outline-success btn-sm'>
                 <i class='bi bi-check-circle'></i> Aceptar
@@ -85,29 +69,33 @@ foreach ($vuelos as $v) {
                 <i class='bi bi-x-circle'></i> Rechazar
             </button>
         </div>";
+    } else {
+        echo "<div class='d-inline-flex align-items-center px-3 py-1 rounded-pill bg-info text-dark shadow-sm'>
+                <i class='bi bi-info-circle me-1'></i> {$estadoVuelo->getValor()}
+              </div>";
     }
 
-    echo "</td></tr>";
+    echo "</div></td></tr>";
 }
 
 echo '</tbody></table></div>';
 ?>
 
 <script>
-// === GENERAR LOS EVENTOS PARA CADA VUELO ===
 <?php 
 foreach ($vuelos as $v) { 
-    if ($v->getEstadoVuelo()->getIdEstado() == 6) {
-
+    if ($v->getEstadoVuelo()->getIdEstado() == 8) {
+        // Botón aceptar → llama a SolicitudCopiloto con accion=aceptar
         echo "$( '#aceptar".$v->getIdVuelo()."' ).on('click', function() {
-                var url = 'ajax/cambiarEstadoVuelo.php?idVuelo=".$v->getIdVuelo()."&estado=8';
+                var url = 'ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=aceptar&idCopiloto=".$idCopiloto."';
                 $('#estado".$v->getIdVuelo()."').load(url);
                 $('#aceptar".$v->getIdVuelo()."').hide();
                 $('#rechazar".$v->getIdVuelo()."').hide();
         });\n";
 
+        // Botón rechazar → llama a SolicitudCopiloto con accion=rechazar
         echo "$( '#rechazar".$v->getIdVuelo()."' ).on('click', function() {
-                var url = 'ajax/cambiarEstadoVuelo.php?idVuelo=".$v->getIdVuelo()."&estado=7';
+                var url = 'ajax/SolicitudCopiloto.php?idVuelo=".$v->getIdVuelo()."&accion=rechazar';
                 $('#estado".$v->getIdVuelo()."').load(url);
                 $('#aceptar".$v->getIdVuelo()."').hide();
                 $('#rechazar".$v->getIdVuelo()."').hide();

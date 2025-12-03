@@ -16,7 +16,7 @@ class Admin extends Persona{
     public function obtenerAdminId(){
         $conexion = new Conexion();
         $conexion -> abrir();
-        $adminDAO = new AdminDAO($this->id, null, null, null, null, null);
+        $adminDAO = new AdminDAO($this->id, null, null, null, null, $this->clave);
         try {
             $sql =$adminDAO -> obtenerAdminId();
             $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
@@ -25,6 +25,7 @@ class Admin extends Persona{
                 $this->apellido = $fila[1];
                 $this->correo = $fila[2];
                 $this->telefono = $fila[3];
+                $this->clave    = $fila[4];
             }
             $conexion -> cerrar();
         } catch (Exception $e) {
