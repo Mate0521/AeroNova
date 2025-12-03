@@ -59,7 +59,7 @@ class PasajeroDAO
     }
     public function obtenerPasajeroId(){
         return [
-            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta`,`Clave`
                     FROM `g2_pasajero` 
                     WHERE `idPasajero`= :id",
             "parametros" => [
@@ -79,5 +79,95 @@ class PasajeroDAO
             ]
         ];
     }
+
+    public function consultar()
+    {
+        return [
+            "sql"=>"SELECT `idPasajero`, `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
+                FROM `g2_pasajero` ",
+            "parametros"=>[]
+        ];
+    }
+
+    public function cambiarEstado()
+    {       
+        return [
+            "sql"=>"UPDATE `g2_pasajero` 
+                SET `estado_cuenta`= :estado 
+                WHERE `idPasajero`= :pasajero",
+            "parametros"=>[
+                ":estado"=>$this->estado_cuenta,
+                ":pasajero"=>$this->id
+            ]  
+        ];
+    }
+
+    public function actualizarNombre()
+    {
+        return [
+            "sql" => "UPDATE g2_pasajero SET nombre = :nombre WHERE idPasajero = :id",
+            "parametros" => [
+                ":nombre" => $this->nombre,
+                ":id" => $this->id
+            ]
+        ];
+    }
+
+    public function actualizarApellido()
+    {
+        return [
+            "sql" => "UPDATE g2_pasajero SET apellido = :apellido WHERE idPasajero = :id",
+            "parametros" => [
+                ":apellido" => $this->apellido,
+                ":id" => $this->id
+            ]
+        ];
+    }
+
+    public function actualizarCorreo()
+    {
+        return [
+            "sql" => "UPDATE g2_pasajero SET correo = :correo WHERE idPasajero = :id",
+            "parametros" => [
+                ":correo" => $this->correo,
+                ":id" => $this->id
+            ]
+        ];
+    }
+
+    public function actualizarTelefono()
+    {
+        return [
+            "sql" => "UPDATE g2_pasajero SET telefono = :telefono WHERE idPasajero = :id",
+            "parametros" => [
+                ":telefono" => $this->telefono,
+                ":id" => $this->id
+            ]
+        ];
+    }
+
+    public function buscarPasajero($texto)
+    {
+        return [
+            "sql" => "SELECT `idPasajero`, `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
+                FROM `g2_pasajero`
+                WHERE `Nombre` LIKE :nombre 
+                OR `Apellido` LIKE :apel
+                OR `Correo` LIKE :correo
+                OR `Telefono` LIKE :tel
+                ORDER BY `Nombre`
+                ",
+
+            "parametros" => [
+                ":nombre"=>"%$texto%",
+                ":apel"=>"%$texto%",
+                ":correo"=>"%$texto%",
+                ":tel"=>"%$texto%"
+            ]
+        ];
+    }
+
+
 }
+
 ?>

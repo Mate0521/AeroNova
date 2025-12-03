@@ -117,7 +117,7 @@ class Ticket
 
     public function calcularPrecioBase()
     {
-        $oilPriceKey = getenv('OILPRICE_KEY');
+        $oilPriceKey=getenv("OILPRICE_KEY");
 
         $url = 'https://api.oilpriceapi.com/v1/prices/latest';
 
@@ -477,7 +477,8 @@ class Ticket
     {
         $conexion = new Conexion();
         $conexion->abrir();
-        $ticketDAO = new TicketDAO(null, null, null, null, $this->pasajero);
+        $ticketDAO = new TicketDAO(null, null, null,
+         null, $this->pasajero);
 
         $tickets = [];
 
@@ -563,6 +564,65 @@ class Ticket
             return [];
         }
     }
+
+    public function obtenerTickets()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO();
+        try{
+            $sql = $ticketDAO->obtenerTickets();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $tickets =[];
+            while ($fila = $conexion->registro()) {
+                $t =new Ticket($fila[0], $fila[1], $fila[2], 
+                $fila[3], $fila[4], null, $fila[6]);
+
+                $vueloOB = new Vuelo($fila[5]);
+                $vueloOB->obtenerVueloId();
+                $t->setVuelo($vueloOB) ;
+
+
+                $tickets[] = $t;
+            }
+            $conexion->cerrar();
+            return $tickets;
+
+        }catch(Exception $e){
+            return $e;
+        }
+
+    }
+
+    public function obtenerDestinosFrecuentesAll()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO();
+
+        try {
+            $sql = $ticketDAO->destinosFrecuentesAll();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $destinos = [];
+
+            while ($fila = $conexion->registro()) {
+                $destinos[] = [
+                    "ciudad" => $fila[0],
+                    "cantidad" => intval($fila[1])
+                ];
+            }
+
+            $conexion->cerrar();
+            return $destinos;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    
 
 
 

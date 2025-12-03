@@ -1,3 +1,4 @@
+
 <?php
 // Verificar sesión y cargar objeto según rol
 if(isset($_SESSION["rol"])){
@@ -39,62 +40,60 @@ if(isset($_SESSION["rol"])){
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <?php if($_SESSION["rol"] == "admin"): //admin?>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Reporte</a></li>
-                            <!-- rutas -->
+
+                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("dashboarAdmin") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Dashboard</a></li>
+                            <!-- pilotos -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Pilotos
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> Pilotos
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelPilotoAdmin') ?>">Informacion Piloto</a></li>
                                 </ul>
                             </li>
-                            <!-- vuelos -->
+                            <!-- Pasajeros -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Pasajeros
+                                    <i class="bi bi-person-bounding-box"></i> Pasajeros
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('administrarPasajeros') ?>">Adminidtrar Pasajeros</a></li>
                                 </ul>
                             </li>
-                            <!-- aviones -->
+                            <!-- Vuelos -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-sign-turn-slight-left"></i> Vuelos
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Vuelo</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Eliminar Vuelo</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('SolicitarVuelo') ?>">Asignar vuelos</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('verVuelosProgramados') ?>">Asignar copiloto</a></li>
                                 </ul>
                             </li>
-                            <!-- pilotos -->
+                            <!-- Aviones -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Aviones
+                                    <i class="bi bi-airplane-fill"></i> Aviones
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Aviones</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Nuevo avion</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelAviones') ?>">Ver Aviones</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('addAvion') ?>">Nuevo avion</a></li>
                                 </ul>
-
-
                             </li>
-                            <!-- usuarios -->
+                            <!-- Rutas -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-sign-turn-slight-left"></i> Rutas
+                                    <i class="bi bi-geo-alt"></i> Rutas
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Rutas</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelRutas') ?>">Ver Rutas</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode("addRuta") ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode("addCiudad") ?>">Crear Nueva Ciudad Aeroportuaria</a></li>
                                 </ul>
                             </li>
 
-                            <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>"><i class="bi bi-box-arrow-in-down-left"></i>Configuracion</a></li>
                             <?php $userName = $admin->getNombre(); 
-                            $panel="PanelDatosPiloto"?>
+                            $panel="PanelDatosAdmin"?>
 
                         <?php elseif($_SESSION["rol"] == "pasajero"): //pasajero?>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("panelPasajero") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Buscar Vuelos</a></li>
@@ -102,7 +101,7 @@ if(isset($_SESSION["rol"])){
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("Checkin") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Check-in</a></li>
                             <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("constTick") ?>"><i class="bi bi-box-arrow-in-down-left"></i> Consultar mis tikets</a></li>
                             <?php $userName = $pasajero->getNombre() . " " . $pasajero->getApellido(); 
-                            $panel="PanelDatosPiloto"?>
+                            $panel="PanelDatosPasajero" ?>
 
                         <?php elseif($_SESSION["rol"] == "piloto"): //piloto?>
                             <li class="nav-item">
@@ -158,10 +157,10 @@ if(isset($_SESSION["rol"])){
                         <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode('Home') ?>">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="?pid=<?= base64_encode("Checkin") ?>">Check-in</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Ofertas y Destinos</a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Informacion sobre vuelos y aviones</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Vuelos</a></li>
-                                <li><a class="dropdown-item" href="#">Rutas</a></li>
+                                <li><a class="dropdown-item" href="?pid=<?= base64_encode('vuelos') ?>">Vuelos</a></li>
+                                <li><a class="dropdown-item" href="?pid=<?= base64_encode("aviones")?>">Aviones</a></li>
                             </ul>
                         </li>
                     </ul>

@@ -34,21 +34,34 @@ $pages = [
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
     "Activar" => "views/Activacio.php",
-    "panelAdmin" => "views/sesionAdmin.php",
+    "panelAdmin" => "views/Admin/sesionAdmin.php",
     "panelPiloto" => "views/piloto/sesionPiloto.php",
     "panelVuelos" => "views/piloto/misvuelos.php",
     "Login" => "views/autenticar.php",
     "PanelDatosPiloto" => "views/piloto/PanelDatosPiloto.php",
     "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php",
     "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
-    "Login" => "views/autenticar.php",
     "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
     "crearTikecket" => "views/Pasajero/CrearTikecket.php",
     "Checkin"=> "views/Pasajero/CheckIn.php",
     "constTick" => "views/Pasajero/ConsultarTickets.php",
-    "dashboarad" => "views/Pasajero/Estadisticas.php"
+    "dashboarad" => "views/Pasajero/Estadisticas.php",//--
+    "administrarPasajeros"=>"views/Admin/AdminPasajeros.php", 
+    "dashboarAdmin"=>"views/Admin/EstadisticasAdmin.php",
+    'PanelAviones'=>"views/Admin/PanelAviones.php",
+    'addAvion'=>"views/Admin/AdicionAvion.php",
+    'PanelRutas'=>"views/Admin/PanelRutas.php",
+    "addRuta"=>"views/Admin/AdicionRuta.php",
+    "addCiudad"=>"views/Admin/AdicionCiudad.php",
+    "PanelPilotoAdmin"=>"views/piloto/PanelPilotoAdmin.php",
+    "SolicitarVuelo"=>"views/piloto/SolicitarVuelo.php",
+    "verVuelosProgramados"=>"views/Vuelos/verVuelosProgramados.php",
+    "solicitudcopiloto"=>"views/Piloto/solicitudcopiloto.php",
+    "PanelDatosAdmin"=>"views/Administrador/PanelDatosAdministrador.php",
+    "PanelDatosPasajero"=>"views/Pasajero/PanelDatosPasajero.php",
+    "vuelos"=>"views/Vuelos/Vuelos.php",
+    "aviones"=>"views/Avion/Consultaraviones.php"
 ];
-
 // Página por defecto
 $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
 
@@ -60,14 +73,15 @@ if (isset($_POST["cerrarSecion"])) {
     exit();
 }
 
+
 // Vistas públicas que NO requieren sesión
-$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin"];
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin","vuelos","aviones"];
 
 // Vistas privadas por rol
 $privadasPorRol = [
-    "admin" => ["panelAdmin"],
-    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto"],
-    "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad"]
+    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin"],
+    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto", "solicitudcopiloto"],
+    "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad","PanelDatosPasajero"]
 ];
 
 
@@ -106,7 +120,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Charts -->
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body class="bg-black text-white">
@@ -120,6 +134,7 @@ if (!isset($_SESSION["id"]) || empty($_SESSION["id"])) {
         ?>
     </div>
 
+    
     <!-- CONTENIDO PRINCIPAL -->
     <div class="container mt-4 mb-4 text-center">
         <?php

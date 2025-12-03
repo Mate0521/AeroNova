@@ -46,16 +46,16 @@ class Pasajero extends Persona{
             $conexion -> ejecutar($sql["sql"], $sql["parametros"]);
             $conexion -> cerrar();
 
-            // $asunto = "Regitro de cliente";
-            // $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
-            // $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
-            // $mensaje .= "http://p2.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
-            // $opciones = array(
-            //     "From" => "contacto@itiud.org",
-            //     "Reply-To" => "no-responder@itiud.org"
-            // );
+            $asunto = "Regitro de cliente";
+            $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
+            $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
+            $mensaje .= "http://p2.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
+            $opciones = array(
+                "From" => "contacto@itiud.org",
+                "Reply-To" => "no-responder@itiud.org"
+            );
             
-            // mail($this->correo, $asunto, $mensaje, $opciones);
+            mail($this->correo, $asunto, $mensaje, $opciones);
 
 
             return true;
@@ -124,6 +124,7 @@ class Pasajero extends Persona{
                 $this->correo = $fila[2];
                 $this->telefono = $fila[3];
                 $this->estado_cuenta = $fila[4];
+                $this->clave  = $fila[5];
             }
             $conexion -> cerrar();
         } catch (Exception $e) {
@@ -147,6 +148,128 @@ class Pasajero extends Persona{
             return false;
         }
     }
+
+    public function consultar()
+    {
+        $conexion = new Conexion();
+        $conexion -> abrir();
+        $pasajeroDAO = new PasajeroDAO();
+        try{
+            $sql=$pasajeroDAO->consultar();
+            $conexion->ejecutar($sql['sql'], $sql['parametros']);
+            $pasajeros = [];
+            while($fila=$conexion->registro()){
+                $p =new Pasajero($fila[0], $fila[1], $fila[2], $fila[3], $fila[4],"","",$fila[5]);
+                $pasajeros[] = $p;
+            }
+            $conexion->cerrar();
+            return $pasajeros;
+        }catch(Exception $e){
+            $conexion->cerrar();
+            return $e;
+
+        }
+
+    }
+    public function cambiarEstado()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $pasajeroDAO = new PasajeroDAO(
+            $this->id, "", "", "", "", "", "",
+            $this->estado_cuenta
+        );
+
+        $sql = $pasajeroDAO->cambiarEstado();
+        $conexion->ejecutar($sql['sql'], $sql['parametros']);
+
+        $this->estado_cuenta = $this->estado_cuenta == 1 ? 1 : 0;
+
+        $conexion->cerrar();
+    }
+
+    public function actualizarCampos($cambios)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+
+            // Creamos el DAO
+            $pasajeroDAO = new PasajeroDAO(
+                $this->id,
+                isset($cambios["nombre"]) ? $cambios["nombre"] : "",
+                isset($cambios["apellido"]) ? $cambios["apellido"] : "",
+                isset($cambios["correo"]) ? $cambios["correo"] : "",
+                isset($cambios["telefono"]) ? $cambios["telefono"] : ""
+            );
+
+            // Recorremos cada cambio y lo ejecutamos
+            foreach ($cambios as $campo => $valorNuevo) {
+
+                switch ($campo) {
+
+                    case "nombre":
+                        $sql = $pasajeroDAO->actualizarNombre();
+                        break;
+
+                    case "apellido":
+                        $sql = $pasajeroDAO->actualizarApellido();
+                        break;
+
+                    case "correo":
+                        $sql = $pasajeroDAO->actualizarCorreo();
+                        break;
+
+                    case "telefono":
+                        $sql = $pasajeroDAO->actualizarTelefono();
+                        break;
+
+                    default:
+                        continue 2;
+                }
+
+
+                $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            }
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
+    public function buscarPasajero($texto)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $pasajeroDAO = new PasajeroDAO(null, null, null, null, null);
+        $sql = $pasajeroDAO->buscarPasajero($texto);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $lista = [];
+
+        while ($fila = $conexion->registro()) {
+
+            $p = new Pasajero( $fila[0],$fila[1],$fila[2], 
+            $fila[3],$fila[4], $fila[5]);
+
+            $lista[] = $p;
+        }
+
+        $conexion->cerrar();
+        return $lista;
+    }
+
+
+
 
 
 

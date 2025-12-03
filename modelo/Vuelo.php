@@ -509,28 +509,23 @@ public function buscar($filtro)
 
     while (($tupla = $conexion->registro()) != null) {
 
-        // Piloto principal
         $pilotoPrincipal = new Piloto($tupla[5]);
         $pilotoPrincipal->obtenerPilotoId();
 
-        // Copiloto
         $copiloto = new Piloto($tupla[6]);
         $copiloto->obtenerPilotoId();
 
-        // Avión
         $avion = new Avion($tupla[7]);
         $avion->obtenerAvionMatricula();
 
-        // Ruta
         $ruta = new Ruta($tupla[8]); // idRuta
         $ruta->setOrigenNombre($tupla[9]);   // nombre origen
         $ruta->setDestinoNombre($tupla[10]); // nombre destino
 
-        // Estado
+
         $estado = new Estado($tupla[11]);
         $estado->obtenerEstadoVueloId();
 
-        // Creamos el objeto Vuelo completo
         $vuelo = new Vuelo(
             $tupla[0], // idVuelo
             $tupla[1], // fecha
@@ -628,6 +623,305 @@ public function buscar($filtro)
         }
     }
 
+    public function consultarVuelosLigh()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarVuelosLigh();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], $fila[3], 
+                $fila[4], $fila[5], $fila[6], $fila[7], $fila[8]);
+
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function consultarPorRuta()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO(null, null, null, null, null,
+    null, $this->ruta);
+
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarPorRuta();
+            $conexion->ejecutar($sql["sql"],$sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1]);
+
+
+                $avionOB = new Avion($fila[2]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $estado = new Estado($fila[3]);
+                $estado->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estado);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+    
+public function obtenerVuelo() {
+    $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO();
+        $vuelos = [];
+
+        try {
+            $sql = $vueloDAO->obtenerVuelo();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1], $fila[2], null, null, null, null, $fila[7], null);
+
+                $pilotoOB = new Piloto($fila[3]);
+                $pilotoOB->obtenerPilotoId();
+                $vuelo->setPilotoPrincipal($pilotoOB);
+
+                $copilotoOB = new Piloto($fila[4]);
+                $copilotoOB->obtenerPilotoId();
+                $vuelo->setCopiloto($copilotoOB);
+
+                $avionOB = new Avion($fila[5]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $rutaOB = new Ruta($fila[6]);
+                $rutaOB->obtenerRutaId();
+                $vuelo->setRuta($rutaOB);
+
+                $estadoOB = new Estado($fila[8]);
+                $estadoOB->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estadoOB);
+
+                $vuelos[] = $vuelo;
+            }
+
+            $conexion->cerrar();
+            return $vuelos;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+}
+
+
+public function crear() {
+    $conexion = new Conexion();
+    $conexion->abrir();
+
+    if (empty($this->hora_llegada)) {
+        $this->hora_llegada = $this->calcularHoraLlegada();
+    }
+
+    $avionMatricula = ($this->avion instanceof Avion)
+        ? $this->avion->getMatricula()
+        : $this->avion;
+
+    $vueloDAO = new VueloDAO(
+        null,
+        $this->fecha,
+        $this->hora_despegue,
+        $this->piloto_principal,
+        $this->copiloto,
+        $avionMatricula,
+        $this->ruta,
+        $this->hora_llegada
+    );
+
+    $sqlCheck = $vueloDAO->verificarDisponibilidadAvion();
+    $conexion->ejecutar($sqlCheck["sql"], $sqlCheck["parametros"]);
+    $fila = $conexion->registro();
+
+    if ($fila && $fila["total"] > 0) {
+        $conexion->cerrar();
+        throw new Exception("El avión ya está programado en esa fecha y hora.");
+    }
+
+    $sql = $vueloDAO->crearVuelo();
+    $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+    $conexion->cerrar();
+
+    return true;
+}
+
+
+
+
+private function calcularHoraLlegada() {
+    require_once(__DIR__ . "/Ruta.php");
+
+    if (empty($this->ruta) || !is_numeric($this->ruta)) {
+        throw new Exception("ID de ruta inválido");
+    }
+
+    $ruta = new Ruta($this->ruta);
+    $ruta->obtenerRutaId(); // carga duración desde BD
+    $duracionHoras = $ruta->convertirTimeAHoras();
+
+    // 🔍 Validar formato de hora antes de explotar
+    if (!preg_match("/^\d{2}:\d{2}$/", $this->hora_despegue)) {
+        throw new Exception("Hora de despegue inválida");
+    }
+
+    list($h, $m) = explode(":", $this->hora_despegue);
+    $totalMin = ((int)$h * 60) + (int)$m + ($duracionHoras * 60);
+
+    $hFinal = floor($totalMin / 60) % 24;
+    $mFinal = $totalMin % 60;
+
+    return sprintf("%02d:%02d", $hFinal, $mFinal);
+}
+
+
+public function obtenerVuelosProgramados()
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $vueloDAO = new VueloDAO();
+    $vuelos = [];
+
+    try {
+        $sql = $vueloDAO->obtenerVuelosProgramados();
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        while ($fila = $conexion->registro()) {
+            // Primero instanciamos los objetos relacionados usando las IDs
+            $pilotoOB = new Piloto($fila[4]);
+            $pilotoOB->obtenerPilotoId();
+
+            $copilotoOB = new Piloto($fila[5]);
+            $copilotoOB->obtenerPilotoId();
+
+            $avionOB = new Avion($fila[6]);
+            $avionOB->obtenerAvionMatricula();
+
+            $rutaOB = new Ruta($fila[7]);
+            $rutaOB->obtenerRutaId();
+
+            $estadoOB = new Estado($fila[8]);
+            $estadoOB->obtenerEstadoVueloId();
+
+            $vuelo = new Vuelo(
+                $fila[0],  
+                $fila[1],   
+                $fila[2],  
+                $pilotoOB,  
+                $copilotoOB,
+                $avionOB,   
+                $rutaOB,    
+                $fila[3],   
+                $estadoOB   
+            );
+
+            $vuelos[] = $vuelo;
+        }
+
+        $conexion->cerrar();
+        return $vuelos;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
+
+ public function consultarVuelosPendienteCopiloto($idCopiloto, $estado)
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $vueloDAO = new VueloDAO();
+    $vuelos = [];
+
+    try {
+        $sql = $vueloDAO->consultarVuelosPendienteCopiloto($idCopiloto, $estado);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        // Iteramos los resultados
+        while ($fila = $conexion->registro()) {
+
+            $vuelo = new Vuelo(
+                $fila[0], 
+                $fila[1],
+                $fila[2], 
+                null,
+                null,
+                null,
+                null,
+                $fila[7], 
+                null
+            );
+
+            $pilotoOB = new Piloto($fila[3]);
+            $pilotoOB->obtenerPilotoId();
+            $vuelo->setPilotoPrincipal($pilotoOB);
+
+            $copilotoOB = new Piloto($fila[4]);
+            $copilotoOB->obtenerPilotoId();
+            $vuelo->setCopiloto($copilotoOB);
+
+            $avionOB = new Avion($fila[5]);
+            $avionOB->obtenerAvionMatricula();
+            $vuelo->setAvion($avionOB);
+
+            $rutaOB = new Ruta($fila[6]);
+            $rutaOB->obtenerRutaId();
+            $vuelo->setRuta($rutaOB);
+
+            $estadoOB = new Estado($fila[8], null);
+            $estadoOB->obtenerEstadoVueloId();
+            $vuelo->setEstadoVuelo($estadoOB);
+
+            $vuelos[] = $vuelo;
+        }
+
+        $conexion->cerrar();
+        return $vuelos;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+public function aceptarCopiloto($idVuelo) {
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $dao = new VueloDAO();
+    $sql = $dao->aceptarCopiloto($idVuelo);
+    $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+    $conexion->cerrar();
+}
+
+public function rechazarCopiloto($idVuelo) {
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $dao = new VueloDAO();
+    $sql = $dao->rechazarCopiloto($idVuelo);
+    $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+    $conexion->cerrar();
+}
 
 
 }

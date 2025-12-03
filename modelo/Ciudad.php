@@ -75,4 +75,25 @@ class Ciudad
             return [];
         }
     }
+    
+    public function crear()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+            $ciudadDAO = new CiudadDAO(null, $this->nombre);
+            $sql = $ciudadDAO->crearCiudad();
+
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            $conexion->cerrar();
+
+            return "ok";
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
 }
