@@ -48,6 +48,7 @@ class Pasajero extends Persona{
 
             $asunto = "Regitro de cliente";
             $mensaje = "Hola " . $this->nombre ." ". $this->apellido. "\n\r";
+            $mensaje .= "Tu codigo es: \n\r". $this->codigoVerificacion;
             $mensaje .= "Debe activar su cuenta haciendo clic en: \n\r";
             $mensaje .= "http://p2.itiud.org/?pid=" . base64_encode("Activar") . "&c=" . base64_encode($this->correo);
             $opciones = array(
