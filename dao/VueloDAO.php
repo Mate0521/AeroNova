@@ -116,4 +116,118 @@ public function buscar($filtro)
 
 
 
+            public function obtenerVuelo()
+    {
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo`
+                    FROM `g2_vuelo` ",
+            "parametros" => []
+        ];
+    }
+public function crearVuelo() {
+        return [
+            "sql" => "INSERT INTO g2_vuelo 
+                        (Fecha, Hora_Despegue, Hora_Llegada, 
+                         Piloto_principal, Copiloto, 
+                         Avion_Matricula, Ruta_idRuta, 
+                         Estado_Vuelo_idEstado_Vuelo)
+                      VALUES 
+                        (:fecha, :horaDespegue, :horaLlegada,
+                         :piloto, :copiloto,
+                         :avion, :ruta, :estado)",
+            "parametros" => [
+                ":fecha"        => $this->fecha,
+                ":horaDespegue" => $this->hora_despegue,
+                ":horaLlegada"  => $this->hora_llegada, 
+                ":piloto"       => $this->piloto_principal,
+                ":copiloto"     => null,
+                ":avion"        => $this->avion,
+                ":ruta"         => $this->ruta,
+                ":estado"       => 8
+            ]
+        ];
+    }
+public function verificarDisponibilidadAvion() {
+    return [
+        "sql" => "SELECT COUNT(*) as total
+                  FROM g2_vuelo
+                  WHERE Avion_Matricula = :avion
+                    AND Fecha = :fecha
+                    AND (
+                        Hora_Despegue < :hora_llegada
+                        AND Hora_Llegada > :hora_despegue
+                    )",
+        "parametros" => [
+            ":avion" => $this->avion,
+            ":fecha" => $this->fecha,
+            ":hora_despegue" => $this->hora_despegue,
+            ":hora_llegada"  => $this->hora_llegada
+        ]
+    ];
+}
+
+public function obtenerVuelosProgramados() {
+    return [
+        "sql" => "SELECT v.idVuelo, v.Fecha, v.Hora_Despegue, v.Hora_Llegada,
+                         v.Piloto_principal, v.copiloto,
+                         a.Matricula,
+                         r.idRuta,v.Estado_Vuelo_idEstado_Vuelo
+                  FROM g2_vuelo v
+                  INNER JOIN g2_piloto p ON v.Piloto_principal = p.idPiloto
+                  INNER JOIN g2_avion a ON v.Avion_Matricula = a.Matricula
+                  INNER JOIN g2_ruta r ON v.Ruta_idRuta = r.idRuta
+                  INNER JOIN g2_ciudad co ON r.Origen = co.idCiudad
+                  INNER JOIN g2_ciudad cd ON r.Destino= cd.idCiudad
+                  WHERE v.Estado_Vuelo_idEstado_Vuelo = 8
+                  ORDER BY v.Fecha ASC, v.Hora_Despegue ASC",
+        "parametros" => []
+    ];
+}
+public function consultarVuelosPendienteCopiloto($idCopiloto, $estado)
+{
+    return [
+        "sql" => "SELECT idVuelo, Fecha, Hora_Despegue, Piloto_principal, Copiloto,
+                         Avion_Matricula, Ruta_idRuta, Hora_Llegada, Estado_Vuelo_idEstado_Vuelo
+                  FROM g2_vuelo
+                  WHERE Estado_Vuelo_idEstado_Vuelo = ?
+                  AND Copiloto = ?",
+        "parametros" => [$estado, $idCopiloto]
+    ];
+}
+
+public function asignarCopiloto($idVuelo, $idCopiloto) {
+    return [
+        "sql" => "UPDATE g2_vuelo 
+                  SET Copiloto = :idCopiloto, Estado_Vuelo_idEstado_Vuelo = 8 
+                  WHERE idVuelo = :idVuelo",
+        "parametros" => [
+            ":idVuelo" => $idVuelo,
+            ":idCopiloto" => $idCopiloto
+        ]
+    ];
+}
+
+public function aceptarCopiloto($idVuelo) {
+    return [
+        "sql" => "UPDATE g2_vuelo 
+                  SET Estado_Vuelo_idEstado_Vuelo = 1
+                  WHERE idVuelo = :idVuelo",
+        "parametros" => [":idVuelo" => $idVuelo]
+    ];
+}
+
+public function rechazarCopiloto($idVuelo) {
+    return [
+        "sql" => "UPDATE g2_vuelo 
+                  SET Copiloto = NULL, Estado_Vuelo_idEstado_Vuelo = 8
+                  WHERE idVuelo = :idVuelo",
+        "parametros" => [":idVuelo" => $idVuelo]
+    ];
+}
+
+
+
+
+
+
 }

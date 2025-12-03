@@ -100,7 +100,7 @@ foreach ($vuelos as $v) {
     if ($v->getEstadoVuelo()->getIdEstado() == 6) {
 
         echo "$( '#aceptar".$v->getIdVuelo()."' ).on('click', function() {
-                var url = 'ajax/cambiarEstadoVuelo.php?idVuelo=".$v->getIdVuelo()."&estado=1';
+                var url = 'ajax/cambiarEstadoVuelo.php?idVuelo=".$v->getIdVuelo()."&estado=8';
                 $('#estado".$v->getIdVuelo()."').load(url);
                 $('#aceptar".$v->getIdVuelo()."').hide();
                 $('#rechazar".$v->getIdVuelo()."').hide();

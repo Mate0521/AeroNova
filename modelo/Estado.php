@@ -98,21 +98,50 @@ public function obtenerEstadoVuelo()
             return $e;
         }
     }
-    public function obtenerEstadoPilotoId()
-    {
+    public function obtenerEstadoPilotoId() {
         $conexion = new Conexion();
         $conexion->abrir();
-        $estadoDAO = new EstadoDAO($this->idEstado, null);
+        $estadoDAO = new EstadoDAO($this->idEstado);
+
         try {
             $sql = $estadoDAO->obtenerEstadoPilotoId();
             $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
             if ($fila = $conexion->registro()) {
-                $this->valor = $fila[0];
+                $this->valor = $fila[0]; // asigna el valor desde la BD
             }
+
             $conexion->cerrar();
         } catch (Exception $e) {
             $conexion->cerrar();
             return $e;
         }
+    }
+  public function obtenerEstadoPilotos() {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $estadoDAO = new EstadoDAO();
+
+        try {
+            $sql = $estadoDAO->obtenerEstadoPilotoS(); // ← usa el método correcto
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $estados = [];
+
+            while ($fila = $conexion->registro()) {
+                $e = new Estado();
+                $e->setIdEstado($fila[0]);
+                $e->setValor($fila[1]);
+                $estados[] = $e;
+            }
+
+            $conexion->cerrar();
+            return $estados;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return [];
+        }
+    
     }
 }

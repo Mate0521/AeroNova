@@ -1,15 +1,10 @@
 <?php
-// ===========================
-//  ACCESO SOLO PARA PILOTOS
-// ===========================
+
 if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "piloto") {
     header("Location: index.php?error=acceso_denegado");
     exit();
 }
 
-// ===========================
-//   CARGAR MODELO
-// ===========================
 require_once("modelo/Piloto.php");
 
 // Crear objeto y cargar datos
@@ -19,9 +14,7 @@ $piloto->obtenerPilotoId();
 $mensaje = "";
 $mensajePass = "";
 
-// ===========================
-//  ACTUALIZAR DATOS DEL PERFIL
-// ===========================
+
 if (isset($_POST["actualizar"])) {
 
     $nombre   = $_POST["nombre"];
@@ -204,9 +197,7 @@ if (isset($_POST["cambiarPass"])) {
 
 
 
-            <!-- =======================
-                    CAMBIAR CONTRASEÑA
-            ======================== -->
+           
             <hr class="text-white">
 
             <h4 class="mt-4">Cambiar Contraseña</h4>

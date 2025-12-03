@@ -41,4 +41,28 @@ class Avion
             return $e;
         }
     }
+    
+public function obtenerAviones() {
+    $conexion = new Conexion();
+        $conexion->abrir();
+        $avionDAO = new AvionDAO();
+        $aviones = [];
+
+        try {
+            $sql = $avionDAO->obtenerAviones();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            while ($fila = $conexion->registro()) {
+                $avion = new Avion($fila[0], $fila[1], $fila[2]);
+                $aviones[] = $avion;
+            }
+
+            $conexion->cerrar();
+            return $aviones;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+}
 }

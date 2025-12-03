@@ -73,5 +73,68 @@ class Ruta
             return $e;
         }
     }
+<<<<<<< Updated upstream
 }
 ?>
+=======
+
+public function convertirTimeAHoras() {
+    $time = $this->duracion_estimada;
+
+    if (empty($time)) return 0;
+
+    $parts = explode(":", $time);
+    $h = isset($parts[0]) ? (int)$parts[0] : 0;
+    $m = isset($parts[1]) ? (int)$parts[1] : 0;
+    $s = isset($parts[2]) ? (int)$parts[2] : 0;
+
+    return $h + ($m / 60) + ($s / 3600);
+}
+
+
+public function obtenerRutas()
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $rutaDAO = new RutaDAO();
+    $rutas = [];
+
+    try {
+        $sql = $rutaDAO->obtenerRutas();
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        while ($fila = $conexion->registro()) {
+            // SQL: idRuta, Duracion_Estimada, Distancia_KM, Origen, Destino
+            $idRuta           = $fila[0];
+            $duracionEstimada = $fila[1];
+            $distanciaKM      = $fila[2];
+            $idOrigen         = $fila[3];
+            $idDestino        = $fila[4];
+
+            // ✅ Instanciar ciudades con sus IDs
+            $ciudadOrigen = new Ciudad($idOrigen);
+            $ciudadOrigen->obtenerCiudadId();
+
+            $ciudadDestino = new Ciudad($idDestino);
+            $ciudadDestino->obtenerCiudadId();
+
+            // ✅ Construir la ruta con datos correctos
+            $ruta = new Ruta($idRuta, $duracionEstimada, $distanciaKM, $ciudadOrigen, $ciudadDestino);
+            $rutas[] = $ruta;
+        }
+
+        $conexion->cerrar();
+        return $rutas;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
+
+}
+
+    
+?>
+>>>>>>> Stashed changes

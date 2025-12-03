@@ -19,7 +19,7 @@ class AdminDAO {
 
     public function obtenerAdminId(){
         return [
-            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono` 
+            "sql" => "SELECT  `Nombre`, `Apellido`, `Correo`, `Telefono`,`Clave` 
                     FROM `g2_administrador` 
                     WHERE `idAdministrador`= :id",
             "parametros" => [

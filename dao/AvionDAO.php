@@ -5,7 +5,9 @@ class AvionDAO
     private $modelo;
     private $capacidad;
 
-    public function __construct($matricula = null, $modelo = null, $capacidad = null)
+    
+
+   public function __construct($matricula = null, $modelo = null, $capacidad = null)
     {
         $this->matricula = $matricula;
         $this->modelo = $modelo;
@@ -21,6 +23,15 @@ class AvionDAO
             "parametros" => [
                 ":matricula" => $this->matricula
             ]
+        ];
+    }
+
+    public function obtenerAviones()
+    {
+        return [
+            "sql" => "SELECT `Matricula`,`Modelo`, `Capacidad` 
+                    FROM `g2_avion`",
+            "parametros" => []
         ];
     }
 }

@@ -38,9 +38,26 @@ $pages = [
     "panelVuelos" => "views/piloto/misvuelos.php",
     "Login" => "views/autenticar.php",
     "PanelDatosPiloto" => "views/piloto/PanelDatosPiloto.php",
+<<<<<<< Updated upstream
     "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php"
+=======
+    "HistorialVuelosPiloto" => "views/piloto/HistorialVuelosPiloto.php",
+    "panelPasajero"=>"views/Pasajero/PanelPasajero.php",
+    "reservarVuelo" => "views/Pasajero/CompraVuelo.php",
+    "crearTikecket" => "views/Pasajero/CrearTikecket.php",
+    "Checkin"=> "views/Pasajero/CheckIn.php",
+    "constTick" => "views/Pasajero/ConsultarTickets.php",
+    "dashboarad" => "views/Pasajero/Estadisticas.php",
+    "PanelPilotoAdmin"=>"views/piloto/PanelPilotoAdmin.php",
+    "SolicitarVuelo"=>"views/piloto/SolicitarVuelo.php",
+    "verVuelosProgramados"=>"views/Vuelos/verVuelosProgramados.php",
+    "solicitudcopiloto"=>"views/Piloto/solicitudcopiloto.php",
+    "PanelDatosAdmin"=>"views/Administrador/PanelDatosAdministrador.php",
+    "PanelDatosPasajero"=>"views/Pasajero/PanelDatosPasajero.php",
+    "vuelos"=>"views/Vuelos/Vuelos.php",
+    "aviones"=>"views/Avion/Consultaraviones.php"
+>>>>>>> Stashed changes
 ];
-
 // Página por defecto
 $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
 
@@ -52,14 +69,25 @@ if (isset($_GET["salir"])) {
     exit();
 }
 
+<<<<<<< Updated upstream
 // Vistas públicas
 $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home"];
+=======
+// Vistas públicas que NO requieren sesión
+$vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin","vuelos","aviones"];
+>>>>>>> Stashed changes
 
 // Control de acceso por rol
 $privadasPorRol = [
+<<<<<<< Updated upstream
     "admin" => ["panelAdmin"],
     "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto","HistorialVuelosPiloto"],
     "pasajero" => ["panelPasajero"]
+=======
+    "admin" => ["panelAdmin","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin"],
+    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto", "solicitudcopiloto"],
+    "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad","PanelDatosPasajero"]
+>>>>>>> Stashed changes
 ];
 
 // Si no hay sesión y la página no es pública -> Error
