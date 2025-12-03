@@ -1,7 +1,5 @@
 <?php 
-var_dump($_POST);
 if(isset($_POST["registrar"])){
-    echo "llego";
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
     $correo = $_POST["correo"];

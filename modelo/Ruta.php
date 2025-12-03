@@ -170,7 +170,7 @@ class Ruta
                         break;
 
                     default:
-                        continue 2;
+                        continue;
                 }
 
                 $conexion->ejecutar($sql["sql"], $sql["parametros"]);
@@ -331,5 +331,5 @@ public function obtenerRutas()
 }
 
 }   
-?>
+
 
