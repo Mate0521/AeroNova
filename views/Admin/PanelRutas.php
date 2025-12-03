@@ -303,7 +303,7 @@ if ($_SESSION["rol"] != "admin") {
         let idRuta = $(this).data("id");
 
         $.ajax({
-            url: "ajax/InfoRuta.php",
+            url: "ajax/infoRuta.php",
             type: "GET",
             data: { idRuta: idRuta },
             success: function (html) {
