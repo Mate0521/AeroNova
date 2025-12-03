@@ -170,7 +170,7 @@ class Ruta
                         break;
 
                     default:
-                        continue;
+                        continue 2;
                 }
 
                 $conexion->ejecutar($sql["sql"], $sql["parametros"]);
