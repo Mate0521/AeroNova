@@ -34,7 +34,7 @@ public function obtenerEstadoVuelo()
     {
         return [
             "sql" => "SELECT `Valor` 
-                    FROM `g2_estado_vuelo`      
+                    FROM `g2_estado_ticket`      
                     WHERE `idEstado_Ticket`= :idEstado",
             "parametros" => [
                 ":idEstado" => $this->idEstado

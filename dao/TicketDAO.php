@@ -197,5 +197,19 @@ class TicketDAO
         ];
     }
 
+    public function destinosFrecuentesAll()
+    {
+        return [
+            "sql" => "SELECT c.Nombre, COUNT(*) AS viajes
+                    FROM g2_ticket t
+                    INNER JOIN g2_vuelo v ON t.Vuelo_idVuelo = v.idVuelo
+                    INNER JOIN g2_ruta r ON v.Ruta_idRuta = r.idRuta
+                    INNER JOIN g2_ciudad c ON r.Destino = c.`idCiudad`
+                    GROUP BY r.Destino
+                    ORDER BY viajes DESC",
+            "parametros" => []
+        ];
+    }
+
 
 }

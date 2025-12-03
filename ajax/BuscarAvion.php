@@ -7,7 +7,6 @@ $q = isset($_GET["q"]) ? trim($_GET["q"]) : "";
 
 $avion = new Avion();
 $resultado = $avion->buscarAvion($q); 
-var_dump($q);
 
 if (count($resultado) == 0) {
     echo "<tr><td colspan='4' class='text-center text-muted'>Sin resultados</td></tr>";

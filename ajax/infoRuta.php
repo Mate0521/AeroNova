@@ -41,8 +41,7 @@ $vuelos = $v->consultarPorRuta();
                             <td><?= $vuelo->getAvion()->getModelo() ?></td>
                             <td>
                             <?php
-                            echo "<span class='badge bg-primary'>".$v->getEstadoVuelo()."</span>";
-                                switch ($v->getEstadoVuelo()) {
+                                switch ($vuelo->getEstadoVuelo()->getIdEstado()) {
 
                                     case "1": echo "<span class='badge bg-primary'>Programado</span>"; break;
                                     case "2": echo "<span class='badge bg-success'>En Vuelo</span>"; break;

@@ -671,7 +671,9 @@ public function buscar($filtro)
                 $avionOB->obtenerAvionMatricula();
                 $vuelo->setAvion($avionOB);
 
-                $vuelo->setEstadoVuelo($fila[3]);
+                $estado = new Estado($fila[3]);
+                $estado->obtenerEstadoVueloId();
+                $vuelo->setEstadoVuelo($estado);
 
                 $vuelos[] = $vuelo;
             }

@@ -62,7 +62,7 @@ class AvionDAO
         return [
             "sql" =>
             "SELECT 
-                v.idVuelo,v.Fecha, v.Hora_Despegue , v.Hora_Llegada ,
+                v.idVuelo, v.Fecha, v.Hora_Despegue , v.Hora_Llegada ,
                 co.idCiudad , co.Nombre , cd.idCiudad , cd.Nombre ,
                 ev.idEstado_Vuelo , ev.Valor 
                 FROM g2_vuelo v

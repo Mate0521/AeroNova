@@ -3,7 +3,10 @@ if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "admin") {
     header("Location: ?pid=" . base64_encode("Error"));
     exit;
 }
+$googleKey = $_ENV["GOOGLE_MAPS_KEY"];
+
 ?>
+
 
 <div class="container mt-4">
 
@@ -95,15 +98,73 @@ if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "admin") {
 
     </div>
 
+    <div class="row mt-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Ciudades a las que más has viajado</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Región:</label>
+                    <select id="selectRegion" class="form-select">
+                        <option value="world">🌍 Mundo</option>
+
+                        <option value="002">🌍 África (continente)</option>
+                        <option value="015">África del Norte</option>
+                        <option value="011">África Occidental</option>
+                        <option value="014">África Oriental</option>
+                        <option value="017">África Central</option>
+                        <option value="018">África del Sur</option>
+
+                        <option value="150">🌍 Europa (continente)</option>
+                        <option value="154">Europa del Norte</option>
+                        <option value="155">Europa Occidental</option>
+                        <option value="151">Europa del Este</option>
+                        <option value="039">Europa del Sur</option>
+
+                        <option value="019">🌍 América (continente)</option>
+                        <option value="005">América del Sur</option>
+                        <option value="013">América Central</option>
+                        <option value="021">América del Norte</option>
+                        <option value="029">Caribe</option>
+
+                        <option value="142">🌍 Asia (continente)</option>
+                        <option value="034">Asia del Sur</option>
+                        <option value="030">Asia Oriental</option>
+                        <option value="035">Sudeste Asiático</option>
+                        <option value="143">Asia Central</option>
+                        <option value="145">Asia Occidental</option>
+
+                        <option value="009">🌍 Oceanía (continente)</option>
+                    </select>
+                </div>
+                <div id="chart_destinos" >
+
+                </div>
+
+                <div class="mt-2">
+                    <button class="btn btn-outline-primary btn-sm reload-chart" data-chart="geo_chart">Recargar</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
-    google.charts.load("current", { packages:["corechart"] });
+    google.charts.load("current", {
+        packages: ["geochart", "corechart"],
+        mapsApiKey: "<?= $googleKey ?>"
+    });
 
-    $(document).ready(function() {
+    // Cuando cargue Google Charts → cargar todos los gráficos
+    google.charts.setOnLoadCallback(() => {
+        cargarGeoChart();
         cargarGraficoPasajerosEstado();
         cargarGraficoTicketsEstado();
         cargarGraficoVuelosEstado();
@@ -133,6 +194,9 @@ if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "admin") {
 
             case "rutasTop":
                 cargarRutasPopulares();
+                break;
+            case "geo_chart":
+                cargarGeoChart();
                 break;
 
             default:
@@ -381,6 +445,40 @@ if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "admin") {
         };
 
         img.src = "data:image/svg+xml;base64," + btoa(svgString);
+    });
+
+    function cargarGeoChart() {
+
+        $.ajax({
+            url: "ajax/estadisticasDestinosPas.php",
+            type: "POST",
+            dataType: "json",
+            success: function(data) {
+
+                let tabla = [["City","Viajes"]];
+                data.forEach(row => tabla.push([row.ciudad, parseInt(row.cantidad)]));
+
+                let dataTable = google.visualization.arrayToDataTable(tabla);
+
+                let regionSeleccionada = $("#selectRegion").val();
+
+                let options = {
+                    region: regionSeleccionada,
+                    displayMode: "markers",
+                    colorAxis: { colors: ["lightblue", "blue"] }
+                };
+
+                let chart = new google.visualization.GeoChart(
+                    document.getElementById("chart_destinos")
+                );
+
+                chart.draw(dataTable, options);
+            }
+        });
+    }
+
+    $(document).on("change", "#selectRegion", function() {
+        cargarGeoChart();
     });
 
 

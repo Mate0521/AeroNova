@@ -594,6 +594,34 @@ class Ticket
 
     }
 
+    public function obtenerDestinosFrecuentesAll()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $ticketDAO = new TicketDAO();
+
+        try {
+            $sql = $ticketDAO->destinosFrecuentesAll();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $destinos = [];
+
+            while ($fila = $conexion->registro()) {
+                $destinos[] = [
+                    "ciudad" => $fila[0],
+                    "cantidad" => intval($fila[1])
+                ];
+            }
+
+            $conexion->cerrar();
+            return $destinos;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
     
 
 

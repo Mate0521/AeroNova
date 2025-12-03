@@ -58,13 +58,13 @@ $historial = $avion->obtenerHistorialVuelos();
                         <?php
                             switch ($v->getEstadoVuelo()->getIdEstado()) {
 
-                                case 1: echo "<span class='badge bg-primary'>Programado</span>"; break;
-                                case 2: echo "<span class='badge bg-success'>En Vuelo</span>"; break;
-                                case 3: echo "<span class='badge bg-info text-dark'>Aterrizado</span>"; break;
-                                case 4: echo "<span class='badge bg-warning text-dark'>Retrasado</span>"; break;
-                                case 5: echo "<span class='badge bg-danger'>Cancelado</span>"; break;
-                                case 6: echo "<span class='badge bg-warning text-dark'>Solicitado</span>"; break;
-                                case 7: echo "<span class='badge bg-danger'>Rechazado por piloto</span>"; break;
+                                case 1: echo "<span class='badge bg-primary'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 2: echo "<span class='badge bg-success'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 3: echo "<span class='badge bg-info text-dark'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 4: echo "<span class='badge bg-warning text-dark'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 5: echo "<span class='badge bg-danger'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 6: echo "<span class='badge bg-warning text-dark'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
+                                case 7: echo "<span class='badge bg-danger'>".$v->getEstadoVuelo()->getValor()."</span>"; break;
                                 default: echo "<span class='badge bg-secondary'>Desconocido</span>";
                             }
                         ?>

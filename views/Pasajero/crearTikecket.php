@@ -195,7 +195,7 @@ mail($pasajero->getCorreo(), $asunto, $body, $headers);
 <div class="container text-center mt-5">
     <h2 class="text-success">Compra realizada con éxito</h2>
     <p>Tu ticket ha sido generado correctamente.</p>
-    <a href="tickets/?p=<?= base64_encode($ticketId) ?>" class="btn btn-primary" target="_blank">
+    <a href="tickets/ticket_<?= $ticketId ?>" class="btn btn-primary" target="_blank">
         Descargar Ticket PDF
     </a>
     <a href="?pid=<?= base64_encode('panelPasajero') ?>" class="btn btn-secondary">Volver al Panel</a>

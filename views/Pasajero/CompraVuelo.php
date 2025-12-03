@@ -10,7 +10,6 @@ $precio = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    var_dump($_POST);
 
     if (!isset($_POST['idVuelo']) || !isset($_POST['clase'])) {
         echo "<div class='alert alert-warning'>No se encontro var</div>";
@@ -19,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $idVuelo = intval($_POST['idVuelo']);
     $clase = $_POST['clase'];
-
-    var_dump($_SESSION["v$idVuelo"]["precio"]);
 
     if (!isset($_SESSION["v$idVuelo"]["precio"])) {
         echo "<div class='alert alert-warning'>No se encontraro el precio</div>";
