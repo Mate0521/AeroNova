@@ -67,7 +67,7 @@ if(isset($_SESSION["rol"])){
                                 </a>
                                 <ul class="dropdown-menu text-center">
                                     <li><a class="dropdown-item" href="?pid=<?= base64_encode('SolicitarVuelo') ?>">Asignar vuelos</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('verVuelosProgramados') ?>">Asignar copiloto</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('solicitudcopiloto') ?>">Asignar copiloto</a></li>
                                 </ul>
                             </li>
                             <!-- Aviones -->

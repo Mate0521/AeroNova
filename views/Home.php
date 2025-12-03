@@ -40,10 +40,10 @@ $vuelos = $vuelo->consultarVuelos();
                             <hr class="border-white">
 
                             <p class="mb-1"><strong class="text-white">Origen:</strong> 
-                                <?php echo $vuelo->getRuta()->getOrigen(); ?>
+                                <?php echo $vuelo->getRuta()->getOrigen()->getNombre(); ?>
                             </p>
                             <p class="mb-1"><strong class="text-white">Destino:</strong> 
-                                <?php echo $vuelo->getRuta()->getDestino(); ?>
+                                <?php echo $vuelo->getRuta()->getDestino()->getNombre(); ?>
                             </p>
 
                             <p class="mt-3">

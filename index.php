@@ -56,11 +56,11 @@ $pages = [
     "PanelPilotoAdmin"=>"views/piloto/PanelPilotoAdmin.php",
     "SolicitarVuelo"=>"views/piloto/SolicitarVuelo.php",
     "verVuelosProgramados"=>"views/Vuelos/verVuelosProgramados.php",
-    "solicitudcopiloto"=>"views/Piloto/solicitudcopiloto.php",
+    "solicitudcopiloto"=>"views/piloto/solicitudcopiloto.php",
     "PanelDatosAdmin"=>"views/Administrador/PanelDatosAdministrador.php",
     "PanelDatosPasajero"=>"views/Pasajero/PanelDatosPasajero.php",
     "vuelos"=>"views/Vuelos/Vuelos.php",
-    "aviones"=>"views/Avion/Consultaraviones.php"
+    "aviones"=>"views/Avion/Consultaraviones.php",
 ];
 // Página por defecto
 $page = isset($_GET['pid']) ? base64_decode($_GET['pid']) : 'Home';
@@ -79,8 +79,8 @@ $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin","
 
 // Vistas privadas por rol
 $privadasPorRol = [
-    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin"],
-    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto", "solicitudcopiloto"],
+    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad","PanelPilotoAdmin","SolicitarVuelo","verVuelosProgramados","PanelDatosAdmin", "solicitudcopiloto"],
+    "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto"],
     "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad","PanelDatosPasajero"]
 ];
 

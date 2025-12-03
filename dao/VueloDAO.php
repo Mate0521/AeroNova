@@ -266,7 +266,7 @@ public function crearVuelo() {
                 ":copiloto"     => null,
                 ":avion"        => $this->avion,
                 ":ruta"         => $this->ruta,
-                ":estado"       => 8
+                ":estado"       => 6
             ]
         ];
     }
@@ -349,7 +349,15 @@ public function rechazarCopiloto($idVuelo) {
 }
 
 
-
+    public function consultarVuelosPendienteporcopiloto()
+    {
+        return [
+            "sql" => "SELECT `idVuelo`, `Fecha`, `Hora_Despegue`, `Piloto_principal`, `Copiloto`, `Avion_Matricula`, 
+                                `Ruta_idRuta`, `Hora_Llegada`, `Estado_Vuelo_idEstado_Vuelo` 
+                    FROM `g2_vuelo` where `Estado_Vuelo_idEstado_Vuelo` = 8",
+            "parametros" => []
+        ];
+    }
 
 
 

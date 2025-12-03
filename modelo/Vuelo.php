@@ -923,5 +923,87 @@ public function rechazarCopiloto($idVuelo) {
     $conexion->cerrar();
 }
 
+public function asignarCopiloto($idVuelo, $idCopiloto) {
+    $conexion = new Conexion();
+    $conexion->abrir(); // <<< OBLIGATORIO
+    $dao = new VueloDAO();
+
+    $sql = $dao->asignarCopiloto($idVuelo, $idCopiloto);
+
+    try {
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+        $conexion->cerrar();
+        return true;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        error_log("[Vuelo->asignarCopiloto] Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+    public function consultarVuelosPendienteporcopiloto()
+{
+    $conexion = new Conexion();
+    $conexion->abrir();
+    $vueloDAO = new VueloDAO();
+    $vuelos = [];
+
+    try {
+        $sql = $vueloDAO->consultarVuelosPendienteporcopiloto();
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        while ($fila = $conexion->registro()) {
+
+            $vuelo = new Vuelo(
+                $fila[0], // idVuelo
+                $fila[1], // Fecha
+                $fila[2], // Hora_Despegue
+                null,
+                null,
+                null,
+                null,
+                $fila[7], // hora_llegada
+                null
+            );
+
+            // Piloto principal
+            $pilotoOB = new Piloto($fila[3]);
+            $pilotoOB->obtenerPilotoId();
+            $vuelo->setPilotoPrincipal($pilotoOB);
+
+            // Copiloto
+            $copilotoOB = new Piloto($fila[4]);
+            $copilotoOB->obtenerPilotoId();
+            $vuelo->setCopiloto($copilotoOB);
+
+            // Avión
+            $avionOB = new Avion($fila[5]);
+            $avionOB->obtenerAvionMatricula();
+            $vuelo->setAvion($avionOB);
+
+            // Ruta
+            $rutaOB = new Ruta($fila[6]);
+            $rutaOB->obtenerRutaId();
+            $vuelo->setRuta($rutaOB);
+
+            // Estado vuelo
+            $estadoOB = new Estado($fila[8], null);
+            $estadoOB->obtenerEstadoVueloId();
+            $vuelo->setEstadoVuelo($estadoOB);
+
+            $vuelos[] = $vuelo;
+        }
+
+        $conexion->cerrar();
+        return $vuelos;
+
+    } catch (Exception $e) {
+        $conexion->cerrar();
+        return $e;
+    }
+}
+
 
 }
