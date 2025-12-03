@@ -83,5 +83,206 @@ class Ruta
         return $h + ($m / 60) + ($s / 3600);
     }
 
+    public function consultar()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $rutaDAO = new RutaDAO();
+        try {
+            $sql = $rutaDAO->consultar();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $rutas = [];
+
+            while ($fila = $conexion->registro()) {
+
+                $r = new Ruta($fila[0],$fila[1], $fila[2]);
+
+                $ciudadOrigen = new Ciudad($fila[3]);
+                $ciudadOrigen->obtenerCiudadId();
+                $r->setOrigen($ciudadOrigen);
+
+                $ciudadDestino = new Ciudad($fila[4]);
+                $ciudadDestino->obtenerCiudadId();
+                $r->setDestino($ciudadDestino);
+
+                $rutas[]=$r;
+            }
+            $conexion->cerrar();
+            return $rutas;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+    }
+
+    public function validarRuta($origen, $destino, $idRuta)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $rutaDAO = new RutaDAO($idRuta, null, null,
+        $origen, $destino);
+        try {
+            $sql = $rutaDAO->validarRuta();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            if($fila=$conexion->registro()){
+                $v=true;
+            }else
+                $v=false;
+            $conexion->cerrar();
+            return $v;
+            
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+
+    }
+
+    public function actualizarCampos($cambios)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+
+        try {
+            // Creamos DAO con atributos existentes + los nuevos valores
+            $rutaDAO = new RutaDAO(
+                $this->idRuta,
+                isset($cambios["duracion_estimada"]) ? $cambios["duracion_estimada"] : $this->duracion_estimada,
+                isset($cambios["distancia_KM"]) ? $cambios["distancia_KM"] : $this->distancia_KM,
+                isset($cambios["origen"]) ? $cambios["origen"] : ($this->origen ? $this->origen->getIdCiudad() : null),
+                isset($cambios["destino"]) ? $cambios["destino"] : ($this->destino ? $this->destino->getIdCiudad() : null)
+            );
+
+            // Recorremos cambios uno por uno
+            foreach ($cambios as $campo => $valor) {
+
+                switch ($campo) {
+
+                    case "duracion_estimada":
+                        $sql = $rutaDAO->actualizarDuracion();
+                        break;
+
+                    case "distancia_KM":
+                        $sql = $rutaDAO->actualizarDistancia();
+                        break;
+
+                    case "origen":
+                        $sql = $rutaDAO->actualizarOrigen();
+                        break;
+
+                    case "destino":
+                        $sql = $rutaDAO->actualizarDestino();
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+            }
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
+    public function crearRuta()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        try {
+
+            $rutaDAO = new RutaDAO(
+                null,
+                $this->duracion_estimada,
+                $this->distancia_KM,
+                $this->origen,
+                $this->destino
+            );
+
+            $sql = $rutaDAO->crearRuta();
+
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $conexion->cerrar();
+            return "ok";
+
+        } catch (Exception $e) {
+
+            $conexion->cerrar();
+            return $e->getMessage();
+        }
+    }
+
+    public function buscarRuta($texto)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $rutaDAO = new RutaDAO();
+        $sql = $rutaDAO->buscarRuta($texto);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $lista = [];
+
+        while ($fila = $conexion->registro()) {
+
+            $p = new Ruta( $fila[0],$fila[1],$fila[2]);
+
+            $ciudadOrigen = new Ciudad($fila[3]);
+            $ciudadOrigen->obtenerCiudadId();
+            $p->setOrigen($ciudadOrigen);
+
+            $ciudadDestino = new Ciudad($fila[4]);
+            $ciudadDestino->obtenerCiudadId();
+            $p->setDestino($ciudadDestino);
+
+            $lista[] = $p;
+        }
+
+        $conexion->cerrar();
+        return $lista;
+    }
+
+    public function estadisticaPorRuta()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $rutaDAO = new RutaDAO($this->idRuta);
+
+        try {
+            $sql = $rutaDAO->estadisticaPorRuta();
+            $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+            $resultado = [];
+
+            while ($fila = $conexion->registro()) {
+                $resultado[] = [
+                    "mes" => $fila["mes"],
+                    "cantidad" => $fila["cantidad"]
+                ];
+            }
+
+            $conexion->cerrar();
+            return $resultado;
+
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return [];
+        }
+    }
+
+
+
 }
 ?>

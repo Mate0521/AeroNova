@@ -87,8 +87,9 @@ if(isset($_SESSION["rol"])){
                                     <i class="bi bi-sign-turn-slight-left"></i> Rutas
                                 </a>
                                 <ul class="dropdown-menu text-center">
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Ver Rutas</a></li>
-                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelDatos') ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode('PanelRutas') ?>">Ver Rutas</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode("addRuta") ?>">Crear Nueva Ruta</a></li>
+                                    <li><a class="dropdown-item" href="?pid=<?= base64_encode("addCiudad") ?>">Crear Nueva Ciudad Aeroportuaria</a></li>
                                 </ul>
                             </li>
 

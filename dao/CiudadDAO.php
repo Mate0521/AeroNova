@@ -24,8 +24,21 @@ class CiudadDAO
     public function obtenerCiudades()
     {
         return [
-            "sql" => "SELECT `idCiudad`, `Nombre` FROM `g2_ciudad`",
+            "sql" => "SELECT `idCiudad`, `Nombre` 
+                FROM `g2_ciudad`",
             "parametros" => []
         ];
     }
+
+    public function crearCiudad()
+    {
+        return [
+            "sql" => "INSERT INTO `g2_ciudad`( `Nombre`) 
+                VALUES (:nombre)",
+            "parametros" => [ 
+                ":nombre"=>$this->nombre 
+            ]
+        ];
+    }
+
 }

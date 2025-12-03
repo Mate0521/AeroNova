@@ -11,10 +11,16 @@ if ($_SESSION["rol"] != "admin") {
     <div class="container">
         <div class="row mt-5">
             <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Gestión de Aviones</h3>
+                <div class="card-header">
+                    <h3><i class="bi bi-airplane-fill"></i>  Gestión de Aviones</h3>
+                </div>
+                <div class="d-flex justify-content-center mt-4 mb-4">
+                    <div class="col-6">
+                        <input type="text" id="filtro" class="form-control">
                     </div>
+                </div>
+                <div class="card">
+                    
 
                     <div id="modal_avion"></div>
 
@@ -33,15 +39,13 @@ if ($_SESSION["rol"] != "admin") {
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody id="t_body_aviones">
 
                             <?php foreach ($aviones as $a): ?>
                             <tr data-row="<?= $a->getMatricula() ?>">
 
-                                <!-- Matrícula NO editable -->
                                 <td><strong><?= $a->getMatricula() ?></strong></td>
 
-                                <!-- Modelo editable -->
                                 <td class="edit-campo"
                                     data-id="<?= $a->getMatricula() ?>"
                                     data-campo="modelo"
@@ -49,7 +53,6 @@ if ($_SESSION["rol"] != "admin") {
                                     <?= $a->getModelo() ?>
                                 </td>
 
-                                <!-- Capacidad editable -->
                                 <td class="edit-campo"
                                     data-id="<?= $a->getMatricula() ?>"
                                     data-campo="capacidad"
@@ -57,7 +60,6 @@ if ($_SESSION["rol"] != "admin") {
                                     <?= $a->getCapacidad() ?>
                                 </td>
 
-                                <!-- Acciones -->
                                 <td id="acciones_<?= $a->getMatricula() ?>">
                                     <button class="btn btn-primary btn-sm ver_detalles"
                                         data-id="<?= $a->getMatricula() ?>">
@@ -171,6 +173,20 @@ if ($_SESSION["rol"] != "admin") {
             },
             error: function() {
                 alert("Error cargando detalles del avión.");
+            }
+        });
+    });
+
+    $("#filtro").on("keyup", function() {
+
+        let texto = $(this).val().trim();
+
+        $.ajax({
+            url: "ajax/BuscarAvion.php",
+            type: "GET",
+            data: { q: texto },
+            success: function(res) {
+                $("#t_body_aviones").html(res);
             }
         });
     });

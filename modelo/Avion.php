@@ -185,6 +185,29 @@ class Avion
         }
     }
 
+    public function buscarAvion($texto)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $avionDAO = new AvionDAO();
+        $sql = $avionDAO->buscarAvion($texto);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $lista = [];
+
+        while ($fila = $conexion->registro()) {
+
+            $p = new Avion( $fila[0],$fila[1],$fila[2]);
+
+            $lista[] = $p;
+        }
+
+        $conexion->cerrar();
+        return $lista;
+    }
+
 
 
 

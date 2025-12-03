@@ -226,4 +226,17 @@ public function buscar($filtro)
         ];
     }
 
+    public function consultarPorRuta()
+    {
+        return [
+            "sql"=>"SELECT `idVuelo`, `Fecha`,  `Avion_Matricula`, `Estado_Vuelo_idEstado_Vuelo` 
+                FROM `g2_vuelo` 
+                WHERE `Ruta_idRuta`= :ruta",
+            "parametros"=>[
+                ":ruta"=>$this->ruta
+            ]
+        ];
+    }
+
+
 }

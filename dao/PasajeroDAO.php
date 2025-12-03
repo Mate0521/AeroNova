@@ -146,6 +146,27 @@ class PasajeroDAO
         ];
     }
 
+    public function buscarPasajero($texto)
+    {
+        return [
+            "sql" => "SELECT `idPasajero`, `Nombre`, `Apellido`, `Correo`, `Telefono`, `estado_cuenta` 
+                FROM `g2_pasajero`
+                WHERE `Nombre` LIKE :nombre 
+                OR `Apellido` LIKE :apel
+                OR `Correo` LIKE :correo
+                OR `Telefono` LIKE :tel
+                ORDER BY `Nombre`
+                ",
+
+            "parametros" => [
+                ":nombre"=>"%$texto%",
+                ":apel"=>"%$texto%",
+                ":correo"=>"%$texto%",
+                ":tel"=>"%$texto%"
+            ]
+        ];
+    }
+
 
 }
 

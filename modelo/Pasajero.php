@@ -243,6 +243,31 @@ class Pasajero extends Persona{
         }
     }
 
+    public function buscarPasajero($texto)
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+
+        $pasajeroDAO = new PasajeroDAO(null, null, null, null, null);
+        $sql = $pasajeroDAO->buscarPasajero($texto);
+
+        $conexion->ejecutar($sql["sql"], $sql["parametros"]);
+
+        $lista = [];
+
+        while ($fila = $conexion->registro()) {
+
+            $p = new Pasajero( $fila[0],$fila[1],$fila[2], 
+            $fila[3],$fila[4], $fila[5]);
+
+            $lista[] = $p;
+        }
+
+        $conexion->cerrar();
+        return $lista;
+    }
+
+
 
 
 

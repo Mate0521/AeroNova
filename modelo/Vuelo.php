@@ -652,6 +652,38 @@ public function buscar($filtro)
         }
     }
 
+    public function consultarPorRuta()
+    {
+        $conexion = new Conexion();
+        $conexion->abrir();
+        $vueloDAO = new VueloDAO(null, null, null, null, null,
+    null, $this->ruta);
+
+        $vuelos = [];
+        try {
+            $sql = $vueloDAO->consultarPorRuta();
+            $conexion->ejecutar($sql["sql"],$sql["parametros"]);
+            while ($fila = $conexion->registro()) {
+                $vuelo = new Vuelo($fila[0], $fila[1]);
+
+
+                $avionOB = new Avion($fila[2]);
+                $avionOB->obtenerAvionMatricula();
+                $vuelo->setAvion($avionOB);
+
+                $vuelo->setEstadoVuelo($fila[3]);
+
+                $vuelos[] = $vuelo;
+            }
+            $conexion->cerrar();
+            return $vuelos;
+        } catch (Exception $e) {
+            $conexion->cerrar();
+            return $e;
+        }
+
+    }
+
 
 
 }

@@ -23,7 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <div class="container mt-4">
     <h2><i class="bi bi-airplane-engines"></i> Registrar Nuevo Avión</h2>
-    <p class="text-muted">Complete los datos del nuevo avión.</p>
 
     <?= $mensaje ?>
 

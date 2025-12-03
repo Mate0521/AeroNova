@@ -11,10 +11,18 @@ if ($_SESSION["rol"] != "admin") {
     <div class="container">
         <div class="row mt-5">
             <div class="col">
+            <div class="card-header">
+                <h3><i class="bi bi-person-fill-gear"></i>  Gestion de Pasajeros</h3>
+            </div>
+            <div class="d-flex justify-content-center mt-4 mb-4">
+                <div class="col-6">
+                    <input type="text" id="filtro" class="form-control">
+                </div>
+            </div>
+
+
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Consultar Pasajeros</h3>
-                    </div>
+                    
                     <div id="modal_tickets">
                         
                     </div>
@@ -34,7 +42,7 @@ if ($_SESSION["rol"] != "admin") {
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="t_body_pasajeros">
 
                             <?php foreach ($pasajeros as $c): ?>
                             <tr data-row="<?= $c->getId() ?>">
@@ -69,9 +77,9 @@ if ($_SESSION["rol"] != "admin") {
 
                                 <td>
                                     <div id="estado_<?= $c->getId() ?>" 
-                                         data-id="<?= $c->getId() ?>" 
-                                         data-estado="<?= $c->getEstadoCuenta() ?>" 
-                                         class="estado-toggle">
+                                        data-id="<?= $c->getId() ?>" 
+                                        data-estado="<?= $c->getEstadoCuenta() ?>" 
+                                        class="estado-toggle">
 
                                         <?php if ($c->getEstadoCuenta() == 1): ?>
                                             <span><i class="bi bi-check-circle text-success"></i> Activo</span>
@@ -232,6 +240,20 @@ if ($_SESSION["rol"] != "admin") {
             },
             error: function() {
                 alert("Error cargando los tickets");
+            }
+        });
+    });
+
+    $("#filtro").on("keyup", function() {
+
+        let texto = $(this).val().trim();
+
+        $.ajax({
+            url: "ajax/BuscarPasajero.php",
+            type: "GET",
+            data: { q: texto },
+            success: function(res) {
+                $("#t_body_pasajeros").html(res);
             }
         });
     });

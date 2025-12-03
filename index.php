@@ -34,7 +34,7 @@ $pages = [
     "Error" => "views/Error.php",
     "Registrar" => "views/RegistroPasajero.php",
     "Activar" => "views/Activacio.php",
-    "panelAdmin" => "views/sesionAdmin.php",
+    "panelAdmin" => "views/Admin/sesionAdmin.php",
     "panelPiloto" => "views/piloto/sesionPiloto.php",
     "panelVuelos" => "views/piloto/misvuelos.php",
     "Login" => "views/autenticar.php",
@@ -45,11 +45,14 @@ $pages = [
     "crearTikecket" => "views/Pasajero/CrearTikecket.php",
     "Checkin"=> "views/Pasajero/CheckIn.php",
     "constTick" => "views/Pasajero/ConsultarTickets.php",
-    "dashboarad" => "views/Pasajero/Estadisticas.php",
+    "dashboarad" => "views/Pasajero/Estadisticas.php",//--
     "administrarPasajeros"=>"views/Admin/AdminPasajeros.php", 
     "dashboarAdmin"=>"views/Admin/EstadisticasAdmin.php",
     'PanelAviones'=>"views/Admin/PanelAviones.php",
-    'addAvion'=>"views/Admin/AdicionAvion.php"
+    'addAvion'=>"views/Admin/AdicionAvion.php",
+    'PanelRutas'=>"views/Admin/PanelRutas.php",
+    "addRuta"=>"views/Admin/AdicionRuta.php",
+    "addCiudad"=>"views/Admin/AdicionCiudad.php"
 ];
 
 // Página por defecto
@@ -68,7 +71,7 @@ $vistasPublicas = ["Login", "Registrar", "Error", "Activar", "Home", "Checkin"];
 
 // Vistas privadas por rol
 $privadasPorRol = [
-    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones'],
+    "admin" => ["panelAdmin", "administrarPasajeros", "dashboarAdmin", 'addAvion', 'PanelAviones', 'PanelRutas', "addRuta", "addCiudad"],
     "piloto" => ["panelPiloto", "panelVuelos", "PanelDatosPiloto", "HistorialVuelosPiloto"],
     "pasajero" => ["panelPasajero", "reservarVuelo", "crearTikecket", "Checkin", "constTick", "dashboarad"]
 ];

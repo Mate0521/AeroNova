@@ -106,6 +106,20 @@ class AvionDAO
         ];
     }
 
+    public function buscarAvion($texto)
+    {
+        return [
+            "sql"=>"SELECT `Matricula`, `Modelo`, `Capacidad` FROM `g2_avion` 
+                WHERE `Matricula` LIKE :mat
+                OR `Modelo` LIKE :model 
+                ORDER BY `Matricula`",
+            "parametros"=>[
+                ":mat"=>"%".$texto."%",
+                ":model"=>"%".$texto."%",
+            ]
+        ];
+    }
+
 
 
 }
